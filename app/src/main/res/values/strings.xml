@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">ChatApp</string>
+    <string name="enter_phone_number">Enter Phone Number</string>
+    <string name="enter_code">Enter Code</string>
+    <string name="send_verification_code">GENERATE CODE</string>
+    <string name="welcome_to_your_page">Welcome to your page</string>
+    <string name="logout">LogOut</string>
+    <string name="find_user">find user</string>
+    <string name="user_name">User Name</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="view_contacts">View Contacts</string>
+    <string name="chat_title">Chat Title</string>
+    <string name="title_activity_chat">ChatActivity</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
+    <string name="message">Message</string>
+    <string name="sender">Sender</string>
+    <string name="send">Send</string>
+    <string name="typeMessage">Message....</string>
+    <string name="enter_generated_code">Enter Generated Code</string>
+    <string name="click_to_generate_code">Click To Generate Code</string>
+    <string name="submit_code">Submit Code</string>
 </resources>
