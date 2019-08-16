@@ -19,6 +19,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.onesignal.OneSignal
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.concurrent.TimeUnit
 
@@ -32,7 +33,9 @@ class LogInActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         FirebaseApp.initializeApp(this)
+//        OneSignal.startInit(this).init()
         phoneNumberRequest = phone_number_request
         generateCodeRequestButton = generate_code_button
         generatedVerificationCode = generated_code
@@ -42,15 +45,15 @@ class LogInActivity : AppCompatActivity() {
                 signInWithPhoneCredential(phoneAuthCredential)
             }
 
-            override fun onVerificationFailed(firebaseException: FirebaseException?) {
-                Toast.makeText(applicationContext, firebaseException!!.message, Toast.LENGTH_SHORT).show()
+            override fun onVerificationFailed(firebaseException: FirebaseException) {
+                Toast.makeText(applicationContext, firebaseException.message, Toast.LENGTH_SHORT).show()
                 Log.i("Error", firebaseException.message)
             }
 
             @RequiresApi(Build.VERSION_CODES.O)
-            override fun onCodeSent(verificationId: String?, token: PhoneAuthProvider.ForceResendingToken?) {
+            override fun onCodeSent(verificationId: String, token: PhoneAuthProvider.ForceResendingToken) {
                 super.onCodeSent(verificationId, token)
-                mVerificationId = verificationId!!
+                mVerificationId = verificationId
                 generatedVerificationCode.visibility = View.VISIBLE
                 generateCodeRequestButton.text = getString(R.string.submit_code)
                 phoneNumberRequest.focusable = View.NOT_FOCUSABLE
@@ -65,8 +68,10 @@ class LogInActivity : AppCompatActivity() {
     }
 
     private fun startPhoneNumberVerification() {
-        PhoneAuthProvider.getInstance().verifyPhoneNumber(
-            phoneNumberRequest.text.toString(), 60, TimeUnit.SECONDS, this, mCallBacks )
+        if (phoneNumberRequest.text.isNotEmpty()) {
+            PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                phoneNumberRequest.text.toString(), 60, TimeUnit.SECONDS, this, mCallBacks )
+        }
     }
 
     private fun signInWithPhoneCredential(phoneAuthCredential: PhoneAuthCredential) {
@@ -103,8 +108,12 @@ class LogInActivity : AppCompatActivity() {
     }
 
     private fun verifyPhoneNumberWithCode() {
-        val credential: PhoneAuthCredential = PhoneAuthProvider
-            .getCredential(mVerificationId!!, generatedVerificationCode.text.toString())
-        signInWithPhoneCredential(credential)
+        if (mVerificationId != null && generatedVerificationCode.text.isNotEmpty() ) {
+            val credential: PhoneAuthCredential = PhoneAuthProvider
+                .getCredential(mVerificationId!!, generatedVerificationCode.text.toString())
+            signInWithPhoneCredential(credential)
+        }
+
+
     }
 }

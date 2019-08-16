@@ -10,11 +10,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.login.LogInActivity
 import com.example.chatapp.R
 import com.example.chatapp.findUser.FindUserActivity
+import com.example.chatapp.utils.SendNotification
+import com.facebook.drawee.backends.pipeline.Fresco
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.onesignal.OneSignal
 import kotlinx.android.synthetic.main.activity_main_page.*
 
 class MainPageActivity : AppCompatActivity() {
@@ -29,28 +32,42 @@ class MainPageActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_page)
-        logOutButton = log_out_button
 
+        OneSignal.startInit(this).init()
+        OneSignal.setSubscription(true)
+        OneSignal.idsAvailable(object : OneSignal.IdsAvailableHandler {
+            override fun idsAvailable(userId: String?, registrationId: String?) {
+                FirebaseDatabase.getInstance().getReference().child("user").child(FirebaseAuth.getInstance()
+                    .uid.toString()).child("notificationKey").setValue(userId)
+            }
+        })
+        OneSignal.setInFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
+        SendNotification("Message One", "c42a392e-bf4d-4848-9c90-953bd5260a8a", "Heading One")
+
+
+
+        logOutButton = log_out_button
         findUserButton = find_user_button
         findUserButton.setOnClickListener {
             startActivity(Intent(applicationContext, FindUserActivity::class.java))
         }
 
         logOutButton.setOnClickListener {
+            OneSignal.setSubscription(false)
             FirebaseAuth.getInstance().signOut()
+            Fresco.initialize(this)
             val intent = Intent(applicationContext, LogInActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
             finish()
         }
-
         getPermission()
+        initializeChatRecyclerView()
         displayChatObject()
     }
 
     private fun displayChatObject() {
         val userChatDbReference = FirebaseDatabase.getInstance().getReference("user")
-            .child(FirebaseAuth.getInstance().uid.toString()).child("chat")
         val query = userChatDbReference.orderByValue()
         query.addValueEventListener(object: ValueEventListener {
             override fun onDataChange(dataSnapShot: DataSnapshot) {
@@ -66,19 +83,19 @@ class MainPageActivity : AppCompatActivity() {
 
     private fun createChatInstance(dataSnapShot: DataSnapshot) {
         for (childSnapShot in dataSnapShot.children) {
-            val myChatId = childSnapShot.value.toString()
-            val myChat = Chat(myChatId)
+            val chatId = childSnapShot.child("chat").child("chatId").value.toString()
+            val myChat = Chat(chatId)
             if (chatList.isEmpty()) {
                 chatList.add(myChat)
-                initializeChatRecyclerView()
-                chatAdapter.notifyDataSetChanged()
+//                chatAdapter.notifyDataSetChanged()
             }
             else
-                for (chatIterator in chatList) {
-                    if (chatIterator.chatId != myChat.chatId)
-                        chatList.add(myChat)
-                    initializeChatRecyclerView()
-                    chatAdapter.notifyDataSetChanged()
+                if (chatList.isNotEmpty()) {
+                    for (chatIterator in chatList) {
+                        if (chatIterator.chatId != myChat.chatId)
+                            chatList.add(myChat)
+                        chatAdapter.notifyDataSetChanged()
+                    }
                 }
         }
     }

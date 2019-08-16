@@ -21,9 +21,20 @@
             android:layout_margin="12dp"
             android:layout_alignParentBottom="true"
             android:id="@+id/send_linear_layout"
-            android:orientation="horizontal">
-        <EditText
-                android:layout_weight="0.8"
+            android:orientation="vertical">
+        <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/media_recycler_view">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+            <EditText
+                android:layout_weight="0.5"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/message_input_id"
@@ -31,14 +42,20 @@
                 android:hint="@string/typeMessage"
                 android:importantForAutofill="no"
                 tools:targetApi="o">
-        </EditText>
-
-        <Button
+            </EditText>
+            <Button
+                android:layout_weight="0.3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/add_media_button"
+                android:text="@string/add_media"/>
+            <Button
                 android:layout_weight="0.2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/send_id"
                 android:text="@string/send"/>
+        </LinearLayout>
 
     </LinearLayout>
 

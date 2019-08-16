@@ -10,17 +10,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
-import kotlinx.android.synthetic.main.item_list_view.view.*
+import kotlinx.android.synthetic.main.item_user_view.view.*
 
 class UserAdapter(private val context: Context,
                   private val userList: ArrayList<User>) : RecyclerView.Adapter<UserAdapter.MyViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_list_view, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_user_view, parent, false)
         return MyViewHolder(view)
     }
 
     override fun getItemCount(): Int = userList.size
-
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
        holder.userName.text = userList[position].userName
@@ -35,8 +34,6 @@ class UserAdapter(private val context: Context,
             FirebaseDatabase.getInstance().reference.child("user")
                 .child(userList[position].uid!!).child("chat").child(key.toString())
                 .setValue(true)
-
-
         }
     }
 
@@ -45,8 +42,6 @@ class UserAdapter(private val context: Context,
         val userName: TextView = itemView.user_name
         val listLayout: LinearLayout = itemView.item_view_list
         val phoneNumber: TextView = itemView.user_phone_number
-
-
     }
 
 }

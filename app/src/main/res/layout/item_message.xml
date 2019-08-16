@@ -3,36 +3,34 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:id="@+id/message_list_view">
 
-    <TextView
-            android:layout_width="match_parent"
-            android:visibility="gone"
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:hint="@string/message"
+                android:id="@+id/message">
+        </TextView>
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:hint="@string/sender"
+                android:id="@+id/sender_id">
+        </TextView>
+
+    <ImageView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="12dp"
-            android:hint="@string/messageId"
-            android:id="@+id/message_id">
+            android:maxWidth="150dp"
+            android:maxHeight="200dp"
+            android:background="#000000"
+            android:id="@+id/my_image"
+            android:contentDescription="@string/my_new_image"/>
 
-    </TextView>
-    <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:hint="@string/message"
-            android:id="@+id/message">
 
-    </TextView>
-
-    <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:hint="@string/sender"
-            android:id="@+id/sender_id">
-
-    </TextView>
 
 
 </LinearLayout>
