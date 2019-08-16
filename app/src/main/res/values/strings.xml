@@ -16,11 +16,12 @@
     values-round/strings.xml for round devices.
     -->
     <string name="hello_world">Hello Square World!</string>
-    <string name="message">Message</string>
     <string name="sender">Sender</string>
     <string name="send">Send</string>
     <string name="typeMessage">Message....</string>
     <string name="enter_generated_code">Enter Generated Code</string>
     <string name="click_to_generate_code">Click To Generate Code</string>
     <string name="submit_code">Submit Code</string>
+    <string name="message">Message</string>
+    <string name="messageId">messageId</string>
 </resources>
