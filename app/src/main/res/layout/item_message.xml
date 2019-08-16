@@ -3,16 +3,25 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="50dp"
         android:id="@+id/message_list_view">
 
     <TextView
             android:layout_width="match_parent"
+            android:visibility="gone"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_marginStart="12dp"
-            android:hint="@string/message"
+            android:hint="@string/messageId"
             android:id="@+id/message_id">
+
+    </TextView>
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:hint="@string/message"
+            android:id="@+id/message">
 
     </TextView>
 

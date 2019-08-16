@@ -16,17 +16,15 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>):
         return MessageViewHolder(view)
     }
 
-    override fun getItemCount(): Int {
-        return messageList.size
-    }
+    override fun getItemCount(): Int = messageList.size
 
     override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
-        holder.chatMessage.text = messageList[position].messageId
+        holder.chatMessage.text = messageList[position].message
         holder.sender.text = messageList[position].senderId
     }
 
     inner class MessageViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        val chatMessage: TextView = itemView.message_id
+        val chatMessage: TextView = itemView.message
         val sender: TextView = itemView.sender_id
 
 
