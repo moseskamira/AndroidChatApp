@@ -10,7 +10,7 @@
     <string name="phone_number">Phone Number</string>
     <string name="view_contacts">View Contacts</string>
     <string name="chat_title">Chat Title</string>
-    <string name="title_activity_chat">ChatActivity</string>
+    <string name="title_activity_chat">ChatApp</string>
     <!--
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.
@@ -24,4 +24,9 @@
     <string name="submit_code">Submit Code</string>
     <string name="message">Message</string>
     <string name="messageId">messageId</string>
+    <string name="add_media">Image</string>
+    <string name="newimage">newImage</string>
+    <string name="view_image">View Image</string>
+    <string name="view">View</string>
+    <string name="my_new_image">my new image</string>
 </resources>

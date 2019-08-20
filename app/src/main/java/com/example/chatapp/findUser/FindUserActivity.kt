@@ -21,11 +21,11 @@ class FindUserActivity : AppCompatActivity() {
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private var contactList: ArrayList<User> = ArrayList()
     private var databaseUserList: ArrayList<User> = ArrayList()
-    private var isInitialized: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_find_user)
+        initializeRecyclerView()
         getPhoneContactList()
     }
 
@@ -41,7 +41,6 @@ class FindUserActivity : AppCompatActivity() {
                 .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
             val user = User(phoneContactUserNme, phoneContactNumber, uid = null)
             contactList.add(user)
-
             getUserDetail(user)
         }
     }
@@ -70,11 +69,6 @@ class FindUserActivity : AppCompatActivity() {
                                 }
                             }
                         databaseUserList.add(databaseUser)
-                        if (!isInitialized) {
-                            initializeRecyclerView()
-                            isInitialized = true
-
-                        }
                         myAdapter.notifyDataSetChanged()
                     }
                 }
