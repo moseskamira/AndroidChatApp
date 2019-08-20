@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".mainPage.MainPageActivity">
+        <activity android:name=".mainPage.ChatActivity">
         </activity>
 
         <activity
@@ -41,7 +41,7 @@
                 android:name="com.google.android.wearable.standalone"
                 android:value="true"/>
 
-        <activity android:name=".findUser.FindUserActivity">
+        <activity android:name=".user.UserActivity">
         </activity>
 
     </application>

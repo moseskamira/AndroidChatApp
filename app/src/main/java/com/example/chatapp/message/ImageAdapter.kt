@@ -11,8 +11,8 @@ import com.bumptech.glide.Glide
 import com.example.chatapp.R
 import kotlinx.android.synthetic.main.item_media_view.view.*
 
-class MediaAdapter(private val context: Context, private val mediaUriList: ArrayList<String>)
-    : RecyclerView.Adapter<MediaAdapter.MediaViewHolder>() {
+class ImageAdapter(private val context: Context, private val mediaUriList: ArrayList<String>)
+    : RecyclerView.Adapter<ImageAdapter.MediaViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaViewHolder {
        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_media_view, null, false)
         return MediaViewHolder(view)
