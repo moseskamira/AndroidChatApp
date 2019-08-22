@@ -5,18 +5,22 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.R
+import com.example.chatapp.mainPage.Chat
+import com.example.chatapp.mainPage.ChatActivity
+import com.example.chatapp.user.User
+import com.example.chatapp.utils.SendNotification
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
-import com.onesignal.OneSignal
 import kotlinx.android.synthetic.main.activity_message.*
 
 @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
@@ -24,24 +28,22 @@ class MessageActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     lateinit var imageRecyclerView: RecyclerView
     lateinit var imageLayoutManager: RecyclerView.LayoutManager
-    lateinit var imageAdapter: MediaAdapter
+    lateinit var imageAdapter: ImageAdapter
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private lateinit var messageAdapter: MessageAdapter
     private var messageList: ArrayList<Message> = ArrayList()
     lateinit var sendButton: Button
     lateinit var mediaButton: Button
     lateinit var messageInput: EditText
-    private lateinit var chatId: String
-
+    lateinit var messageDatabase: DatabaseReference
+    private lateinit var myChatObject: Chat
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_message)
         Fresco.initialize(this)
-//        OneSignal.startInit(this).init()
-
         messageInput = message_input_id
-        chatId = intent!!.extras!!.getString("chatId")!!
+        myChatObject = intent.getSerializableExtra("chatObject") as Chat
         sendButton = send_id
         mediaButton = add_media_button
         sendButton.setOnClickListener {
@@ -60,21 +62,19 @@ class MessageActivity : AppCompatActivity() {
     var totalImagesUploaded: Int = 0
 
     private fun sendMessage() {
-
-            val newMessageDb = FirebaseDatabase.getInstance().reference.child("chat")
-                .child("chatId").push()
-            val messageId = newMessageDb.push().key
+        messageDatabase = FirebaseDatabase.getInstance().reference.child("chat").child(myChatObject.chatId)
+            .child("messages")
+//        messageDatabase.push()
+        val messageId = messageDatabase.push().key
             val newMessageMap = HashMap<String, Any>()
             newMessageMap["creator"] = FirebaseAuth.getInstance().uid.toString()
             if (messageInput.text.toString().isNotEmpty()) {
                 newMessageMap["text"] = messageInput.text.toString()
             }
-
             if (mediaUriList.isNotEmpty()) {
                 for (mediaUri in mediaUriList) {
-                    val imageId = newMessageDb.child("media").push().key
+                    val imageId = messageDatabase.child("media").push().key
                     imageIdList.add(imageId!!)
-
                     if (messageId != null) {
                         val filePath: StorageReference = FirebaseStorage.getInstance().reference
                             .child("chat").child("chatId").child(messageId).child(imageId)
@@ -84,7 +84,7 @@ class MessageActivity : AppCompatActivity() {
                                 newMessageMap.put("media/" + imageIdList.get(totalImagesUploaded) + "/", uri.toString())
                                 totalImagesUploaded++
                                 if (totalImagesUploaded == mediaUriList.size) {
-                                    updateDatabaseWithNewMessage(newMessageDb, newMessageMap)
+                                    updateDatabaseWithNewMessage(messageDatabase, newMessageMap)
                                 }
                             }
                         }
@@ -92,11 +92,9 @@ class MessageActivity : AppCompatActivity() {
                 }
             } else {
                 if (messageInput.text.toString().isNotEmpty()) {
-                    updateDatabaseWithNewMessage(newMessageDb, newMessageMap)
-
+                    updateDatabaseWithNewMessage(messageDatabase, newMessageMap)
                 }
             }
-
     }
 
     private fun updateDatabaseWithNewMessage(newMessageDb: DatabaseReference, newMessageMap: HashMap<String, Any>) {
@@ -105,29 +103,55 @@ class MessageActivity : AppCompatActivity() {
         mediaUriList.clear()
         imageIdList.clear()
         imageAdapter.notifyDataSetChanged()
+
+        val newUser = User(FirebaseAuth.getInstance().uid)
+        val message: String = if (newMessageMap["text"] != null) {
+            newMessageMap["text"].toString()
+        } else {
+            "Sent Media"
+        }
+
+        for(user in myChatObject.addUserToList(newUser)) {
+            if (user.uid != FirebaseAuth.getInstance().uid) {
+                if (user.notificationKey != null) {
+                    SendNotification(message, user.notificationKey!!, "New Message")
+                }
+
+            }
+            if (user.notificationKey != null) {
+                Log.d("OUT NOTIFICATION KEY", user.notificationKey!!)
+            }
+
+
+
+        }
     }
 
     private fun getChatMessages() {
-        val chatDbReference = FirebaseDatabase.getInstance().reference.child("chat")
-            .child("chatId")
-        chatDbReference.addChildEventListener(object : ChildEventListener {
+        val newMessageDatabase = FirebaseDatabase.getInstance().reference.child("chat").child(myChatObject.chatId)
+        newMessageDatabase.addChildEventListener(object : ChildEventListener {
             override fun onCancelled(databaseError: DatabaseError) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                TODO("not implemented")
+                //To change body of created functions use File | Settings | File Templates.
             }
 
             override fun onChildMoved(databaseSnapShot: DataSnapshot, p1: String?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                TODO("not implemented")
+                //To change body of created functions use File | Settings | File Templates.
             }
 
             override fun onChildChanged(databaseSnapShot: DataSnapshot, p1: String?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                // DO SOMETHING UPON DATA CHANGE
+                Log.d("DATA CHANGED", databaseSnapShot.toString())
+//                //To change body of created functions use File | Settings | File Templates.
+
             }
 
             override fun onChildAdded(databaseSnapShot: DataSnapshot, p1: String?) {
                 if (databaseSnapShot.exists()) {
                     var displayedChatMessage = ""
                     var displayedSenderId = ""
-                    var imageUrlList: ArrayList<String> = ArrayList()
+                    val imageUrlList: ArrayList<String> = ArrayList()
                     if (databaseSnapShot.child("text").value != null) {
                         displayedChatMessage = databaseSnapShot.child("text").value.toString()
                     }
@@ -138,11 +162,11 @@ class MessageActivity : AppCompatActivity() {
                     if (databaseSnapShot.child("media").childrenCount > 0) {
                         for (imageSnapShot in databaseSnapShot.child("media").children) {
                             imageUrlList.add(imageSnapShot.value.toString())
-
                         }
                     }
 
-                    val chatMessage = Message(databaseSnapShot.key!!, displayedSenderId, displayedChatMessage, imageUrlList)
+                    val chatMessage = Message(databaseSnapShot
+                        .key!!, displayedSenderId, displayedChatMessage, imageUrlList)
                     messageList.add(chatMessage)
                     layoutManager.scrollToPosition(messageList.size - 1)
                     messageAdapter.notifyDataSetChanged()
@@ -150,7 +174,8 @@ class MessageActivity : AppCompatActivity() {
             }
 
             override fun onChildRemoved(dataSnapshot: DataSnapshot) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                TODO("not implemented")
+                //To change body of created functions use File | Settings | File Templates.
             }
         })
     }
@@ -196,7 +221,7 @@ class MessageActivity : AppCompatActivity() {
         imageRecyclerView.isNestedScrollingEnabled = false
         imageRecyclerView.setHasFixedSize(false)
         imageRecyclerView.layoutManager = imageLayoutManager
-        imageAdapter = MediaAdapter(applicationContext, mediaUriList)
+        imageAdapter = ImageAdapter(applicationContext, mediaUriList)
         imageRecyclerView.adapter = imageAdapter
     }
 }

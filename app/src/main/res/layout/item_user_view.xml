@@ -1,20 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginTop="12dp"
         android:id="@+id/item_view_list"
+        android:layout_margin="20sp"
         android:layout_marginStart="18dp">
-    <TextView
-            android:layout_width="match_parent"
+
+    <LinearLayout
             android:layout_height="wrap_content"
-            android:text="@string/user_name"
-            android:id="@+id/user_name"/>
-    <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
+            android:orientation="vertical">
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/user_name"
+                android:id="@+id/user_name"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/phone_number"
+                android:id="@+id/user_phone_number"/>
+    </LinearLayout>
+    <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+    <CheckBox
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/phone_number"
-            android:id="@+id/user_phone_number"/>
+            android:layout_gravity="center"
+            android:id="@+id/add_to_chat"/>
 </LinearLayout>

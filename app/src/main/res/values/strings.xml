@@ -29,4 +29,5 @@
     <string name="view_image">View Image</string>
     <string name="view">View</string>
     <string name="my_new_image">my new image</string>
+    <string name="create_chat_group">Create Chat Group</string>
 </resources>

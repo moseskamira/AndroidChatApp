@@ -1,4 +1,4 @@
-package com.example.chatapp
+package com.example.chatapp.utils
 
 class CountryCodeConverter {
     object Iso2Phone {

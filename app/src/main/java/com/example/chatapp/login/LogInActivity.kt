@@ -11,7 +11,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.example.chatapp.R
-import com.example.chatapp.mainPage.MainPageActivity
+import com.example.chatapp.mainPage.ChatActivity
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.*
@@ -19,7 +19,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.onesignal.OneSignal
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.concurrent.TimeUnit
 
@@ -102,7 +101,7 @@ class LogInActivity : AppCompatActivity() {
 
     private fun userIsLoggedIn() {
         FirebaseAuth.getInstance().currentUser
-        startActivity(Intent(applicationContext, MainPageActivity::class.java))
+        startActivity(Intent(applicationContext, ChatActivity::class.java))
         finish()
 //        return
     }

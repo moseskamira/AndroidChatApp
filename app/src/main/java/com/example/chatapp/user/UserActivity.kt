@@ -1,21 +1,23 @@
-package com.example.chatapp.findUser
+package com.example.chatapp.user
 
 import android.database.Cursor
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.util.Log
+import android.widget.Button
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.R
-import kotlinx.android.synthetic.main.activity_find_user.*
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.android.synthetic.main.activity_user.*
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
 
-class FindUserActivity : AppCompatActivity() {
+class UserActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var myAdapter: UserAdapter
     private lateinit var layoutManager: RecyclerView.LayoutManager
@@ -24,7 +26,11 @@ class FindUserActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_find_user)
+        setContentView(R.layout.activity_user)
+        val createChatGroup: Button = create_chat_group
+        createChatGroup.setOnClickListener {
+            createChatGroup()
+        }
         initializeRecyclerView()
         getPhoneContactList()
     }
@@ -79,6 +85,33 @@ class FindUserActivity : AppCompatActivity() {
             }
             })
         }
+
+    private fun createChatGroup() {
+        val key = FirebaseDatabase.getInstance().reference.child("chat").push().key
+        val chatInfoDatabase = FirebaseDatabase.getInstance().reference.child("chat")
+            .child(key.toString()).child("info")
+        FirebaseDatabase.getInstance().reference.child("user")
+            .child(FirebaseAuth.getInstance().uid.toString()).child("chat").child(key.toString())
+            .setValue(true)
+        val chatMap  = HashMap<String, Any?>()
+        chatMap["id"] = key
+        chatMap["users/${FirebaseAuth.getInstance().uid}"] = true
+        var validChat = false
+        for (user in databaseUserList) {
+            if (user.selected) {
+                validChat = true
+                chatMap["users/ ${user.uid}"] = true
+                FirebaseDatabase.getInstance().reference.child("user")
+                    .child(user.uid!!).child("chat").child(key.toString())
+                    .setValue(true)
+            }
+        }
+        if (validChat) {
+            chatInfoDatabase.updateChildren(chatMap)
+            FirebaseDatabase.getInstance().reference.child("user").child(FirebaseAuth.getInstance().uid!!)
+                .child("chat").child(key!!).setValue(true)
+        }
+    }
 
     private fun initializeRecyclerView() {
         recyclerView = recycler_view
