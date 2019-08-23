@@ -5,9 +5,9 @@ class CountryCodeConverter {
 //        val all: Map<String, String> get() = country2phone
         private val country2phone = HashMap<String, String>()
 
-        fun getPhone(code: String?): String {
+        fun getPhone(code: String): String? {
 
-            return country2phone[code!!.toUpperCase()]!!
+            return country2phone[code.toUpperCase()]!!
         }
 
         init {

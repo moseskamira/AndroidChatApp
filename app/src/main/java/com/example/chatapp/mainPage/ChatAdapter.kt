@@ -15,9 +15,12 @@ import kotlinx.android.synthetic.main.item_chat_view.view.*
 class ChatAdapter(private val context: Context,
                   private val chatList: ArrayList<Chat>) : RecyclerView.Adapter<ChatAdapter.MyViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_chat_view,
+        val chatView = LayoutInflater.from(parent.context).inflate(R.layout.item_chat_view,
             parent, false)
-        return MyViewHolder(view)
+        val chatLayoutParams = RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup
+            .LayoutParams.WRAP_CONTENT)
+        chatView.layoutParams = chatLayoutParams
+        return MyViewHolder(chatView)
     }
 
     override fun getItemCount(): Int = chatList.size

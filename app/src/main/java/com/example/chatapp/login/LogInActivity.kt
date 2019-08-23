@@ -3,7 +3,6 @@ package com.example.chatapp.login
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -26,36 +25,30 @@ class LogInActivity : AppCompatActivity() {
     private lateinit var phoneNumberRequest: EditText
     private lateinit var generateCodeRequestButton: Button
     private lateinit var generatedVerificationCode: EditText
-    private lateinit var mCallBacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
+    private lateinit var verificationCallBack: PhoneAuthProvider.OnVerificationStateChangedCallbacks
     var mVerificationId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         FirebaseApp.initializeApp(this)
-//        OneSignal.startInit(this).init()
         phoneNumberRequest = phone_number_request
         generateCodeRequestButton = generate_code_button
         generatedVerificationCode = generated_code
-
-        mCallBacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+        verificationCallBack = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             override fun onVerificationCompleted(phoneAuthCredential: PhoneAuthCredential) {
-                signInWithPhoneCredential(phoneAuthCredential)
+                signInWithFirebaseAuthCredential(phoneAuthCredential)
             }
-
             override fun onVerificationFailed(firebaseException: FirebaseException) {
                 Toast.makeText(applicationContext, firebaseException.message, Toast.LENGTH_SHORT).show()
-                Log.i("Error", firebaseException.message)
             }
-
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onCodeSent(verificationId: String, token: PhoneAuthProvider.ForceResendingToken) {
                 super.onCodeSent(verificationId, token)
                 mVerificationId = verificationId
                 generatedVerificationCode.visibility = View.VISIBLE
                 generateCodeRequestButton.text = getString(R.string.submit_code)
-                phoneNumberRequest.focusable = View.NOT_FOCUSABLE
+                phoneNumberRequest.visibility= View.GONE
             }
         }
         generateCodeRequestButton.setOnClickListener {
@@ -69,33 +62,31 @@ class LogInActivity : AppCompatActivity() {
     private fun startPhoneNumberVerification() {
         if (phoneNumberRequest.text.isNotEmpty()) {
             PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                phoneNumberRequest.text.toString(), 60, TimeUnit.SECONDS, this, mCallBacks )
+                phoneNumberRequest.text.toString(), 60, TimeUnit.SECONDS, this, verificationCallBack)
         }
     }
 
-    private fun signInWithPhoneCredential(phoneAuthCredential: PhoneAuthCredential) {
+    private fun signInWithFirebaseAuthCredential(phoneAuthCredential: PhoneAuthCredential) {
         FirebaseAuth.getInstance().signInWithCredential(phoneAuthCredential).addOnCompleteListener {
-            val currentUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
-            if (currentUser != null) {
-                val userDatabase = FirebaseDatabase.getInstance().reference.child("user")
-                    .child(currentUser.uid)
-                userDatabase.addListenerForSingleValueEvent(object: ValueEventListener {
+            val currentAuthenticatedUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+            if (currentAuthenticatedUser != null) {
+                val userDatabaseReference = FirebaseDatabase.getInstance().reference
+                    .child("user").child(currentAuthenticatedUser.uid)
+                userDatabaseReference.addListenerForSingleValueEvent(object: ValueEventListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         if (!dataSnapshot.exists()) {
-                            val userMap = HashMap<String, Any>()
-                            userMap["phoneNumber"] = currentUser.phoneNumber.toString()
-                            userMap["userName"]= currentUser.displayName.toString()
-                            userDatabase.updateChildren(userMap)
+                            val userCredentialMap = HashMap<String, Any>()
+                            userCredentialMap["phoneNumber"] = currentAuthenticatedUser.phoneNumber.toString()
+                            userCredentialMap["userName"] = currentAuthenticatedUser.phoneNumber.toString()
+                            userDatabaseReference.updateChildren(userCredentialMap)
                         }
                         userIsLoggedIn()
                     }
-
-                    override fun onCancelled(p0: DatabaseError) {
+                    override fun onCancelled(databaseError: DatabaseError) {
                         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                     }
                 })
             }
-//            userIsLoggedIn()+256789608543
         }
     }
 
@@ -103,16 +94,13 @@ class LogInActivity : AppCompatActivity() {
         FirebaseAuth.getInstance().currentUser
         startActivity(Intent(applicationContext, ChatActivity::class.java))
         finish()
-//        return
     }
 
     private fun verifyPhoneNumberWithCode() {
         if (mVerificationId != null && generatedVerificationCode.text.isNotEmpty() ) {
-            val credential: PhoneAuthCredential = PhoneAuthProvider
+            val phoneCredential: PhoneAuthCredential = PhoneAuthProvider
                 .getCredential(mVerificationId!!, generatedVerificationCode.text.toString())
-            signInWithPhoneCredential(credential)
+            signInWithFirebaseAuthCredential(phoneCredential)
         }
-
-
     }
 }
