@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ChatApp</string>
+    <string name="app_name">MOZELI MUSIC</string>
     <string name="enter_phone_number">Enter Phone Number</string>
     <string name="enter_code">Enter Code</string>
     <string name="send_verification_code">GENERATE CODE</string>
@@ -8,9 +8,9 @@
     <string name="find_user">find user</string>
     <string name="user_name">User Name</string>
     <string name="phone_number">Phone Number</string>
-    <string name="view_contacts">View Contacts</string>
+    <string name="view_contacts">Contacts</string>
     <string name="chat_title">Chat Title</string>
-    <string name="title_activity_chat">ChatApp</string>
+    <string name="title_activity_chat">MOZELI MUSIC</string>
     <!--
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.
@@ -29,5 +29,5 @@
     <string name="view_image">View Image</string>
     <string name="view">View</string>
     <string name="my_new_image">my new image</string>
-    <string name="create_chat_group">Create Chat Group</string>
+    <string name="create_chat_group">Lets Chat</string>
 </resources>

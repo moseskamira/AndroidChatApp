@@ -11,25 +11,28 @@ import com.example.chatapp.R
 import kotlinx.android.synthetic.main.item_user_view.view.*
 
 class UserAdapter(private val context: Context,
-                  private val userList: ArrayList<User>) : RecyclerView.Adapter<UserAdapter.MyViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_user_view, parent, false)
-        return MyViewHolder(view)
+                  private val databaseUserList: ArrayList<User>) : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
+        val userView = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_user_view, parent, false)
+        val viewLayoutParams = RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup
+            .LayoutParams.WRAP_CONTENT)
+        userView.layoutParams = viewLayoutParams
+        return UserViewHolder(userView)
     }
-    override fun getItemCount(): Int = userList.size
+    override fun getItemCount(): Int = databaseUserList.size
 
-    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-       holder.userName.text = userList[position].userName
-        holder.phoneNumber.text = userList[position].phoneNumber
-        holder.checkBox.setOnCheckedChangeListener { buttonView, isChecked -> userList[holder.adapterPosition]
+    override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
+       holder.userName.text = databaseUserList[position].userName
+        holder.phoneNumber.text = databaseUserList[position].phoneNumber
+        holder.checkBox.setOnCheckedChangeListener { _, isChecked -> databaseUserList[holder.adapterPosition]
             .selected = isChecked }
     }
 
 
-    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val checkBox: CheckBox = itemView.add_to_chat
+    inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val userName: TextView = itemView.user_name
         val phoneNumber: TextView = itemView.user_phone_number
-
+        val checkBox: CheckBox = itemView.add_to_chat
     }
 }
