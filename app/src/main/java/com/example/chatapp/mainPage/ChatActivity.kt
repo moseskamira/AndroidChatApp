@@ -49,7 +49,6 @@ class ChatActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-
         getPermission()
         initializeChatRecyclerView()
         displayChatObject()
@@ -86,7 +85,6 @@ class ChatActivity : AppCompatActivity() {
                         if (chatIterator.chatId != myChat.chatId)
                             chatList.add(myChat)
                         getChatData(myChat.chatId)
-//                        chatAdapter.notifyDataSetChanged()
                     }
 
                 }
@@ -113,7 +111,6 @@ class ChatActivity : AppCompatActivity() {
                                     val  newUser = User(userSnapShot.key.toString())
                                     newChat.addUserToList(newUser)
                                     getUserData(newUser)
-
                                 }
                             }
                         }
@@ -145,7 +142,6 @@ class ChatActivity : AppCompatActivity() {
                     }
 
                 }
-
                 chatAdapter.notifyDataSetChanged()
             }
         })

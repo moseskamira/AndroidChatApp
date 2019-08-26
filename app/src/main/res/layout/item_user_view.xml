@@ -3,11 +3,10 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="match_parent"
         android:layout_marginTop="12dp"
         android:id="@+id/item_view_list"
-        android:layout_margin="20sp"
-        android:layout_marginStart="18dp">
+        android:layout_margin="20sp">
 
     <LinearLayout
             android:layout_height="wrap_content"
@@ -20,6 +19,7 @@
                 android:id="@+id/user_name"/>
         <TextView
                 android:layout_width="wrap_content"
+                android:visibility="gone"
                 android:layout_height="wrap_content"
                 android:text="@string/phone_number"
                 android:id="@+id/user_phone_number"/>

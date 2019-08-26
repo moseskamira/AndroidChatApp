@@ -15,9 +15,12 @@ import kotlinx.android.synthetic.main.item_message.view.*
 class MessageAdapter(private val context: Context, private val messageList: ArrayList<Message>)
     : RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
-        val view = LayoutInflater.from(parent.context)
+        val messageView = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_message, parent, false)
-        return MessageViewHolder(view)
+        val messageLayoutParams = RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup
+            .LayoutParams.WRAP_CONTENT)
+        messageView.layoutParams = messageLayoutParams
+        return MessageViewHolder(messageView)
     }
 
     override fun getItemCount(): Int = messageList.size

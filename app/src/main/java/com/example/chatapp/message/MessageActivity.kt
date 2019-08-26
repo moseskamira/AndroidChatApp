@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.R
 import com.example.chatapp.mainPage.Chat
-import com.example.chatapp.mainPage.ChatActivity
 import com.example.chatapp.user.User
 import com.example.chatapp.utils.SendNotification
 import com.facebook.drawee.backends.pipeline.Fresco
@@ -64,7 +63,6 @@ class MessageActivity : AppCompatActivity() {
     private fun sendMessage() {
         messageDatabase = FirebaseDatabase.getInstance().reference.child("chat").child(myChatObject.chatId)
             .child("messages")
-//        messageDatabase.push()
         val messageId = messageDatabase.push().key
             val newMessageMap = HashMap<String, Any>()
             newMessageMap["creator"] = FirebaseAuth.getInstance().uid.toString()
@@ -81,7 +79,7 @@ class MessageActivity : AppCompatActivity() {
                         val uploadTask: UploadTask = filePath.putFile(Uri.parse(mediaUri))
                         uploadTask.addOnSuccessListener {
                             filePath.downloadUrl.addOnSuccessListener { uri ->
-                                newMessageMap.put("media/" + imageIdList.get(totalImagesUploaded) + "/", uri.toString())
+                                newMessageMap["media/${imageIdList[totalImagesUploaded] + "/"}"] = uri.toString()
                                 totalImagesUploaded++
                                 if (totalImagesUploaded == mediaUriList.size) {
                                     updateDatabaseWithNewMessage(messageDatabase, newMessageMap)
@@ -141,7 +139,12 @@ class MessageActivity : AppCompatActivity() {
             }
 
             override fun onChildChanged(databaseSnapShot: DataSnapshot, p1: String?) {
-                // DO SOMETHING UPON DATA CHANGE
+//                if (!dataSnapshot.exists()) {
+//                    val userMap = HashMap<String, Any>()
+//                    userMap["phoneNumber"] = currentUser.phoneNumber.toString()
+//                    userMap["userName"]= currentUser.displayName.toString()
+//                    userDatabaseReference.updateChildren(userMap)
+//                }
                 Log.d("DATA CHANGED", databaseSnapShot.toString())
 //                //To change body of created functions use File | Settings | File Templates.
 

@@ -9,29 +9,28 @@
         android:orientation="vertical">
 
     <EditText
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/phone_number_request"
             android:hint="@string/enter_phone_number"
             android:inputType="phone"
+            android:gravity="center"
             android:autofillHints=""
             tools:targetApi="o"/>
-
-    <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/click_to_generate_code"
-            android:id="@+id/generate_code_button"/>
-
     <EditText
             android:layout_width="match_parent"
             android:visibility="gone"
             android:layout_height="wrap_content"
             android:id="@+id/generated_code"
             android:hint="@string/enter_generated_code"
+            android:gravity="center"
             android:autofillHints=""
             tools:targetApi="o"
             android:inputType=""/>
+    <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/click_to_generate_code"
+            android:id="@+id/generate_code_button"/>
 
 </LinearLayout>

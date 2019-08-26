@@ -3,7 +3,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:id="@+id/message_list_view">
 
         <TextView
@@ -29,8 +29,4 @@
             android:background="#000000"
             android:id="@+id/my_image"
             android:contentDescription="@string/my_new_image"/>
-
-
-
-
 </LinearLayout>
