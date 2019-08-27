@@ -29,9 +29,7 @@ class MessageAdapter(private val context: Context, private val messageList: Arra
         holder.sender.text = messageList[position].senderId
         if (messageList[holder.adapterPosition].imageUrlList.isEmpty()) {
             holder.myImageView.visibility = View.GONE
-        }
-
-        else {
+        } else {
             Glide.with(context).asBitmap().load(messageList[holder.adapterPosition].imageUrlList[0])
                 .into(holder.myImageView)
             holder.myImageView.setOnClickListener { view ->
