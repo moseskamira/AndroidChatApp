@@ -1,13 +1,12 @@
 # Android Chat App
 This project is intended to develop a chat application in Android
 
-## Verification Code Request
+## APP Navigation:
+- From Verification Code generation request to creation of Chat 
 
-![Code Request](/images/generate.png)
+![SnapShot](/images/rec21.gif)
 
-
-## Generated Verification Code Entry
-
-![Generate Code](/images/code.png)
+- From creation of Chat to initiation of chat session 
+![SnapShot2](/images/rec.gif)
 
 ## Future Implementation

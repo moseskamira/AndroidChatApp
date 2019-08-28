@@ -5,8 +5,8 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="8dp"
         tools:context=".mainPage.ChatActivity">
-
     <RelativeLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -14,27 +14,40 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             android:id="@+id/main_page_buttons"
+            android:baselineAligned="false"
+            android:gravity="center"
             app:layout_constraintRight_toRightOf="parent">
-
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/view_contacts"
+                android:text="@string/chats"
                 android:id="@+id/find_user_button"
                 android:layout_marginTop="0dp"
                 android:layout_alignParentTop="true"/>
-
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/audios"
+                android:id="@+id/find_audio_button"
+                android:layout_marginTop="0dp"
+                android:layout_toEndOf="@+id/find_user_button"
+                android:layout_alignParentTop="true"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/info"
+                android:id="@+id/info_button"
+                android:layout_toEndOf="@+id/find_audio_button"
+                android:layout_marginTop="0dp"
+                android:layout_alignParentTop="true"/>
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/logout"
                 android:id="@+id/log_out_button"
-                android:layout_toEndOf="@+id/find_user_button"
-                android:layout_marginStart="32dp"
+                android:layout_toEndOf="@+id/info_button"
                 android:layout_marginTop="0dp"
-                android:layout_alignParentTop="true"
-        />
-
+                android:layout_alignParentTop="true"/>
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -43,7 +56,6 @@
             android:layout_margin="8dp"
             android:id="@+id/chat_recycler_view"
             app:layout_constraintTop_toBottomOf="@id/main_page_buttons">
-
     </androidx.recyclerview.widget.RecyclerView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

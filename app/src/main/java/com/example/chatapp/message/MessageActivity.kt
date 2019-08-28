@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -54,7 +53,6 @@ class MessageActivity : AppCompatActivity() {
         initializeChatRecyclerView()
         initializeImageRecyclerView()
         getChatMessages()
-
     }
 
     private val imageIdList: ArrayList<String> = ArrayList()
@@ -95,7 +93,7 @@ class MessageActivity : AppCompatActivity() {
             }
     }
 
-    private fun updateDatabaseWithNewMessage(newMessageDb: DatabaseReference, newMessageMap: HashMap<String, Any>) {
+    private fun updateDatabaseWithNewMessage(newMessageDb: DatabaseReference, newMessageMap: Map<String, Any>) {
         newMessageDb.updateChildren(newMessageMap)
         messageInput.text = null
         mediaUriList.clear()
@@ -110,23 +108,15 @@ class MessageActivity : AppCompatActivity() {
         }
 
         for(user in myChatObject.addUserToList(newUser)) {
-            if (user.uid != FirebaseAuth.getInstance().uid) {
-                if (user.notificationKey != null) {
-                    SendNotification(message, user.notificationKey!!, "New Message")
-                }
-
+            if (user.uid != FirebaseAuth.getInstance().uid && user.notificationKey != null) {
+                SendNotification(message, user.notificationKey!!, "New Message")
             }
-            if (user.notificationKey != null) {
-                Log.d("OUT NOTIFICATION KEY", user.notificationKey!!)
-            }
-
-
-
         }
     }
 
     private fun getChatMessages() {
-        val newMessageDatabase = FirebaseDatabase.getInstance().reference.child("chat").child(myChatObject.chatId)
+        val newMessageDatabase = FirebaseDatabase.getInstance().reference.child("chat")
+            .child(myChatObject.chatId)
         newMessageDatabase.addChildEventListener(object : ChildEventListener {
             override fun onCancelled(databaseError: DatabaseError) {
                 TODO("not implemented")
@@ -139,15 +129,28 @@ class MessageActivity : AppCompatActivity() {
             }
 
             override fun onChildChanged(databaseSnapShot: DataSnapshot, p1: String?) {
-//                if (!dataSnapshot.exists()) {
-//                    val userMap = HashMap<String, Any>()
-//                    userMap["phoneNumber"] = currentUser.phoneNumber.toString()
-//                    userMap["userName"]= currentUser.displayName.toString()
-//                    userDatabaseReference.updateChildren(userMap)
-//                }
-                Log.d("DATA CHANGED", databaseSnapShot.toString())
-//                //To change body of created functions use File | Settings | File Templates.
+                if (databaseSnapShot.exists()) {
+                    var displayedChatMessage = ""
+                    var displayedSenderId = ""
+                    val imageUrlList: ArrayList<String> = ArrayList()
+                    if (databaseSnapShot.child("text").value != null) {
+                        displayedChatMessage = databaseSnapShot.child("text").value.toString()
+                    }
+                    if (databaseSnapShot.child("creator").value != null) {
+                        displayedSenderId = databaseSnapShot.child("creator").value.toString()
+                    }
+                    if (databaseSnapShot.child("media").childrenCount > 0) {
+                        for (imageSnapShot in databaseSnapShot.child("media").children) {
+                            imageUrlList.add(imageSnapShot.value.toString())
+                        }
+                    }
+                    val chatMessage = Message(databaseSnapShot
+                        .key!!, displayedSenderId, displayedChatMessage, imageUrlList)
 
+                    messageList.add(chatMessage)
+                    layoutManager.scrollToPosition(messageList.size - 1)
+                    messageAdapter.notifyDataSetChanged()
+                }
             }
 
             override fun onChildAdded(databaseSnapShot: DataSnapshot, p1: String?) {
@@ -158,7 +161,6 @@ class MessageActivity : AppCompatActivity() {
                     if (databaseSnapShot.child("text").value != null) {
                         displayedChatMessage = databaseSnapShot.child("text").value.toString()
                     }
-
                     if (databaseSnapShot.child("creator").value != null) {
                         displayedSenderId = databaseSnapShot.child("creator").value.toString()
                     }
@@ -167,9 +169,9 @@ class MessageActivity : AppCompatActivity() {
                             imageUrlList.add(imageSnapShot.value.toString())
                         }
                     }
-
                     val chatMessage = Message(databaseSnapShot
                         .key!!, displayedSenderId, displayedChatMessage, imageUrlList)
+
                     messageList.add(chatMessage)
                     layoutManager.scrollToPosition(messageList.size - 1)
                     messageAdapter.notifyDataSetChanged()

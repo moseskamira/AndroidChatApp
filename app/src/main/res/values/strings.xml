@@ -30,4 +30,8 @@
     <string name="view">View</string>
     <string name="my_new_image">my new image</string>
     <string name="create_chat_group">Lets Chat</string>
+    <string name="audio">Audio</string>
+    <string name="chats">Chats</string>
+    <string name="audios">Audios</string>
+    <string name="info">info</string>
 </resources>

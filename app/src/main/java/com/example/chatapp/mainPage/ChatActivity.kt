@@ -34,7 +34,6 @@ class ChatActivity : AppCompatActivity() {
                 .uid.toString()).child("notificationKey").setValue(userId)
         }
         OneSignal.setInFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
-
         findUserButton = find_user_button
         findUserButton.setOnClickListener {
             startActivity(Intent(applicationContext, UserActivity::class.java))
@@ -57,7 +56,6 @@ class ChatActivity : AppCompatActivity() {
     private fun displayChatObject() {
         val userChatDbReference = FirebaseDatabase.getInstance().getReference("user")
             .child(FirebaseAuth.getInstance().uid.toString()).child("chat")
-
         userChatDbReference.addValueEventListener(object: ValueEventListener {
             override fun onDataChange(dataSnapShot: DataSnapshot) {
                 if (dataSnapShot.exists()) {
@@ -99,7 +97,6 @@ class ChatActivity : AppCompatActivity() {
                 TODO("not implemented")
                 //To change body of created functions use File | Settings | File Templates.
             }
-
             override fun onDataChange(dataSnapShot: DataSnapshot) {
                 if (dataSnapShot.exists()) {
                     val myChatId: String
@@ -128,7 +125,6 @@ class ChatActivity : AppCompatActivity() {
                 TODO("not implemented")
                 //To change body of created functions use File | Settings | File Templates.
             }
-
             override fun onDataChange(dataSnapShot: DataSnapshot) {
                 val user = User(dataSnapShot.key)
                 if (dataSnapShot.child("notificationKey").value != null) {

@@ -112,10 +112,11 @@ class UserActivity : AppCompatActivity() {
                 validChat = true
                 chatMap["users/ ${user.uid}"] = true
                 FirebaseDatabase.getInstance().reference.child("user")
-                    .child(user.uid!!).child("chat").child(key.toString())
+                    .child(user.uid!!).child("chat").child(key!!)
                     .setValue(true)
             }
         }
+
         if (validChat) {
             chatInfoDatabase.updateChildren(chatMap)
             FirebaseDatabase.getInstance().reference.child("user").child(FirebaseAuth.getInstance().uid!!)
