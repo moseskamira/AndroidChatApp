@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.login.LogInActivity
 import com.example.chatapp.R
+import com.example.chatapp.music.MusicPlayerActivity
 import com.example.chatapp.user.UserActivity
 import com.example.chatapp.user.User
 import com.facebook.drawee.backends.pipeline.Fresco
@@ -17,6 +18,7 @@ import com.onesignal.OneSignal
 import kotlinx.android.synthetic.main.activity_chat.*
 
 class ChatActivity : AppCompatActivity() {
+    lateinit var audioPlayer: Button
     lateinit var logOutButton: Button
     lateinit var findUserButton: Button
     private lateinit var chatRecyclerView: RecyclerView
@@ -38,7 +40,12 @@ class ChatActivity : AppCompatActivity() {
         findUserButton.setOnClickListener {
             startActivity(Intent(applicationContext, UserActivity::class.java))
         }
+        audioPlayer = audio_player_button
         logOutButton = log_out_button
+        audioPlayer.setOnClickListener {
+            val playerIntent = Intent(this, MusicPlayerActivity::class.java)
+            startActivity(playerIntent)
+        }
         logOutButton.setOnClickListener {
             OneSignal.setSubscription(false)
             FirebaseAuth.getInstance().signOut()

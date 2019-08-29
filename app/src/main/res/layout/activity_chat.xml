@@ -17,27 +17,28 @@
             android:baselineAligned="false"
             android:gravity="center"
             app:layout_constraintRight_toRightOf="parent">
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/player"
+                android:id="@+id/audio_player_button"
+                android:layout_marginTop="0dp"
+                android:layout_alignParentTop="true"/>
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/chats"
                 android:id="@+id/find_user_button"
                 android:layout_marginTop="0dp"
+                android:layout_toEndOf="@+id/audio_player_button"
                 android:layout_alignParentTop="true"/>
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/audios"
-                android:id="@+id/find_audio_button"
-                android:layout_marginTop="0dp"
+                android:text="@string/songs"
+                android:id="@+id/songs_button"
                 android:layout_toEndOf="@+id/find_user_button"
-                android:layout_alignParentTop="true"/>
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/info"
-                android:id="@+id/info_button"
-                android:layout_toEndOf="@+id/find_audio_button"
                 android:layout_marginTop="0dp"
                 android:layout_alignParentTop="true"/>
         <Button
@@ -45,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/logout"
                 android:id="@+id/log_out_button"
-                android:layout_toEndOf="@+id/info_button"
+                android:layout_toEndOf="@+id/songs_button"
                 android:layout_marginTop="0dp"
                 android:layout_alignParentTop="true"/>
     </RelativeLayout>
