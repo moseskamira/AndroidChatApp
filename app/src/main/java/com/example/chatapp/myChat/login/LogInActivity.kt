@@ -1,4 +1,4 @@
-package com.example.chatapp.login
+package com.example.chatapp.myChat.login
 
 import android.content.Intent
 import android.os.Build
@@ -10,7 +10,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.example.chatapp.R
-import com.example.chatapp.mainPage.ChatActivity
+import com.example.chatapp.myChat.mainPage.ChatActivity
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.*

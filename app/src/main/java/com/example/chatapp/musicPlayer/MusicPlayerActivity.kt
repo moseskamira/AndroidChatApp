@@ -1,4 +1,4 @@
-package com.example.chatapp.music
+package com.example.chatapp.musicPlayer
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -73,7 +73,6 @@ class MusicPlayerActivity : AppCompatActivity() {
                             }
                             songArtiste = textView {
                                 textColor = Color.WHITE
-
                             }
                             linearLayout {
                                 prevButton = imageButton {
@@ -112,9 +111,7 @@ class MusicPlayerActivity : AppCompatActivity() {
                         }.lparams(matchParent, wrapContent) {
                             alignParentBottom()
                         }
-
                     }
-
                 }
 
                 fun playRandom() {
@@ -133,7 +130,7 @@ class MusicPlayerActivity : AppCompatActivity() {
                     songArtiste.text = song.artist
                     mediaPlayer!!.start()
                     playButton.imageResource = R.drawable.ic_pause_circle_outline_black_24dp
-                }
+                    }
                 }
                 fun playOrPause() {
                     val songPlaying: Boolean? = mediaPlayer!!.isPlaying

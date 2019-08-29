@@ -5,7 +5,8 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".login.LogInActivity"
+        android:background="@color/colorMainBackground"
+        tools:context=".myChat.login.LogInActivity"
         android:orientation="vertical">
 
     <EditText
@@ -14,7 +15,11 @@
             android:id="@+id/phone_number_request"
             android:hint="@string/enter_phone_number"
             android:inputType="phone"
+            android:padding="12dp"
+            android:layout_margin="12dp"
             android:gravity="center"
+            android:layout_gravity="center_horizontal"
+            android:background="#ffffff"
             android:autofillHints=""
             tools:targetApi="o"/>
     <EditText
@@ -24,13 +29,18 @@
             android:id="@+id/generated_code"
             android:hint="@string/enter_generated_code"
             android:gravity="center"
+            android:padding="12dp"
+            android:layout_margin="12dp"
+            android:background="#ffffff"
             android:autofillHints=""
             tools:targetApi="o"
             android:inputType=""/>
     <Button
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/click_to_generate_code"
+            android:background="@color/colorButtons"
+            android:layout_gravity="center_horizontal"
             android:id="@+id/generate_code_button"/>
 
 </LinearLayout>

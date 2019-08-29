@@ -1,4 +1,4 @@
-package com.example.chatapp.user
+package com.example.chatapp.myChat.user
 
 import android.content.Context
 import android.view.LayoutInflater

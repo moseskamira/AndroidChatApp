@@ -1,4 +1,4 @@
-package com.example.chatapp.user
+package com.example.chatapp.myChat.user
 
 import java.io.Serializable
 
@@ -12,5 +12,4 @@ constructor(userName: String, phoneNumber: String, uid: String?) : this(uid) {
     this.userName = userName
     this.phoneNumber = phoneNumber
 }
-
 }

@@ -5,22 +5,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/message_list_view">
-
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:hint="@string/message"
-                android:id="@+id/message">
-        </TextView>
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:hint="@string/sender"
-                android:id="@+id/sender_id">
-        </TextView>
-
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="@string/message"
+            android:id="@+id/message">
+    </TextView>
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/sender"
+            android:id="@+id/sender_id">
+    </TextView>
     <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -29,4 +26,9 @@
             android:background="#000000"
             android:id="@+id/my_image"
             android:contentDescription="@string/my_new_image"/>
+    <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="?android:attr/listDivider"/>
 </LinearLayout>

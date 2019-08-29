@@ -1,6 +1,6 @@
-package com.example.chatapp.mainPage
+package com.example.chatapp.myChat.mainPage
 
-import com.example.chatapp.user.User
+import com.example.chatapp.myChat.user.User
 import java.io.Serializable
 
 
