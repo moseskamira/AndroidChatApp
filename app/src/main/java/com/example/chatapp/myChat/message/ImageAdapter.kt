@@ -1,4 +1,4 @@
-package com.example.chatapp.message
+package com.example.chatapp.myChat.message
 
 import android.content.Context
 import android.net.Uri

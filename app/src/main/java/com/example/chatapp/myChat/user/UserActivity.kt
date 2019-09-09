@@ -1,4 +1,4 @@
-package com.example.chatapp.user
+package com.example.chatapp.myChat.user
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
@@ -53,7 +53,6 @@ class UserActivity : AppCompatActivity() {
             }
             val user = User(phoneContactName, phoneContactNumber, uid = null)
             userContactList.add(user)
-            Log.d("PHONE CONTACTS", user.phoneNumber)
         }
         phones.close()
         getDatabaseUserDetail()

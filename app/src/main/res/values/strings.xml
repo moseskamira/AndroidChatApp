@@ -31,7 +31,10 @@
     <string name="my_new_image">my new image</string>
     <string name="create_chat_group">Lets Chat</string>
     <string name="chats">Chat</string>
-    <string name="play">Play</string>
+    <string name="play">Click Here To Play Videos</string>
     <string name="songs">Songs</string>
     <string name="player">Player</string>
+    <string name="todo">TODO</string>
+    <string name="playSong">Play Song</string>
+    <string name="mozeli_videos">MOZELI VIDEOS/ AUDIOS</string>
 </resources>

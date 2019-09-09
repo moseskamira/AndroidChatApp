@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.example.chatapp">
+
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
     <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
@@ -14,19 +15,20 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".music.MusicPlayerActivity">
+        <activity android:name=".song.MySongsActivity">
         </activity>
-        <activity android:name=".login.LogInActivity">
+        <activity android:name=".musicPlayer.MusicPlayerActivity">
+        </activity>
+        <activity android:name="com.example.chatapp.myChat.login.LogInActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".mainPage.ChatActivity">
+        <activity android:name="com.example.chatapp.myChat.mainPage.ChatActivity">
         </activity>
-        <activity
-                android:name=".message.MessageActivity">
+        <activity android:name="com.example.chatapp.myChat.message.MessageActivity">
         </activity> <!-- <uses-library -->
         <!-- android:name="com.google.android.wearable" -->
         <!-- android:required="true"/> -->
@@ -38,7 +40,7 @@
                 android:name="com.google.android.wearable.standalone"
                 android:value="true"/>
 
-        <activity android:name=".user.UserActivity">
+        <activity android:name="com.example.chatapp.myChat.user.UserActivity">
         </activity>
     </application>
 

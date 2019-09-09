@@ -1,4 +1,4 @@
-package com.example.chatapp.mainPage
+package com.example.chatapp.myChat.mainPage
 
 import android.content.Context
 import android.content.Intent
@@ -9,7 +9,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.R
-import com.example.chatapp.message.MessageActivity
+import com.example.chatapp.myChat.message.MessageActivity
 import kotlinx.android.synthetic.main.item_chat_view.view.*
 
 class ChatAdapter(private val context: Context,

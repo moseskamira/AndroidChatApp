@@ -1,4 +1,4 @@
-package com.example.chatapp.mainPage
+package com.example.chatapp.myChat.mainPage
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -6,11 +6,12 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.chatapp.login.LogInActivity
+import com.example.chatapp.myChat.login.LogInActivity
 import com.example.chatapp.R
-import com.example.chatapp.music.MusicPlayerActivity
-import com.example.chatapp.user.UserActivity
-import com.example.chatapp.user.User
+import com.example.chatapp.musicPlayer.MusicPlayerActivity
+import com.example.chatapp.song.MySongsActivity
+import com.example.chatapp.myChat.user.UserActivity
+import com.example.chatapp.myChat.user.User
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -21,6 +22,7 @@ class ChatActivity : AppCompatActivity() {
     lateinit var audioPlayer: Button
     lateinit var logOutButton: Button
     lateinit var findUserButton: Button
+    lateinit var mySongsButton: Button
     private lateinit var chatRecyclerView: RecyclerView
     private lateinit var chatLayoutManager: RecyclerView.LayoutManager
     private lateinit var chatAdapter: ChatAdapter
@@ -45,6 +47,11 @@ class ChatActivity : AppCompatActivity() {
         audioPlayer.setOnClickListener {
             val playerIntent = Intent(this, MusicPlayerActivity::class.java)
             startActivity(playerIntent)
+        }
+        mySongsButton = songs_button
+        mySongsButton.setOnClickListener {
+            val songsIntent = Intent(this, MySongsActivity::class.java)
+            startActivity(songsIntent)
         }
         logOutButton.setOnClickListener {
             OneSignal.setSubscription(false)

@@ -1,4 +1,4 @@
-package com.example.chatapp.message
+package com.example.chatapp.myChat.message
 
 import android.app.Activity
 import android.content.Intent
@@ -7,11 +7,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.R
-import com.example.chatapp.mainPage.Chat
-import com.example.chatapp.user.User
+import com.example.chatapp.myChat.mainPage.Chat
+import com.example.chatapp.myChat.user.User
 import com.example.chatapp.utils.SendNotification
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.google.firebase.auth.FirebaseAuth
@@ -62,8 +63,9 @@ class MessageActivity : AppCompatActivity() {
         messageDatabase = FirebaseDatabase.getInstance().reference.child("chat").child(myChatObject.chatId)
             .child("messages")
         val messageId = messageDatabase.push().key
-            val newMessageMap = HashMap<String, Any>()
-            newMessageMap["creator"] = FirebaseAuth.getInstance().uid.toString()
+        val newMessageMap = HashMap<String, Any>()
+        newMessageMap["creator"] = FirebaseAuth.getInstance().uid.toString()
+
             if (messageInput.text.toString().isNotEmpty()) {
                 newMessageMap["text"] = messageInput.text.toString()
             }
@@ -106,7 +108,6 @@ class MessageActivity : AppCompatActivity() {
         } else {
             "Sent Media"
         }
-
         for(user in myChatObject.addUserToList(newUser)) {
             if (user.uid != FirebaseAuth.getInstance().uid && user.notificationKey != null) {
                 SendNotification(message, user.notificationKey!!, "New Message")
@@ -117,6 +118,7 @@ class MessageActivity : AppCompatActivity() {
     private fun getChatMessages() {
         val newMessageDatabase = FirebaseDatabase.getInstance().reference.child("chat")
             .child(myChatObject.chatId)
+
         newMessageDatabase.addChildEventListener(object : ChildEventListener {
             override fun onCancelled(databaseError: DatabaseError) {
                 TODO("not implemented")
@@ -158,6 +160,7 @@ class MessageActivity : AppCompatActivity() {
                     var displayedChatMessage = ""
                     var displayedSenderId = ""
                     val imageUrlList: ArrayList<String> = ArrayList()
+                    messageList.clear()
                     if (databaseSnapShot.child("text").value != null) {
                         displayedChatMessage = databaseSnapShot.child("text").value.toString()
                     }
@@ -193,6 +196,10 @@ class MessageActivity : AppCompatActivity() {
         recyclerView.layoutManager = layoutManager
         messageAdapter = MessageAdapter(applicationContext, messageList)
         recyclerView.adapter = messageAdapter
+        val itemTouchHelper = ItemTouchHelper(SwipeToDelete(messageAdapter,applicationContext))
+        itemTouchHelper.attachToRecyclerView(recyclerView)
+
+
     }
 
     private val pickImageContent = 1
@@ -229,4 +236,5 @@ class MessageActivity : AppCompatActivity() {
         imageAdapter = ImageAdapter(applicationContext, mediaUriList)
         imageRecyclerView.adapter = imageAdapter
     }
+
 }

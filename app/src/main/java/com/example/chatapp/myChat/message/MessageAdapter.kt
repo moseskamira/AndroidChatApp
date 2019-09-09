@@ -1,4 +1,4 @@
-package com.example.chatapp.message
+package com.example.chatapp.myChat.message
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -14,6 +14,9 @@ import kotlinx.android.synthetic.main.item_message.view.*
 
 class MessageAdapter(private val context: Context, private val messageList: ArrayList<Message>)
     : RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() {
+    private lateinit var mRecentlyDeletedItem: Message
+    private var mRecentlyDeletedItemPosition: Int = 0
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
         val messageView = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_message, parent, false)
@@ -45,5 +48,31 @@ class MessageAdapter(private val context: Context, private val messageList: Arra
         val chatMessage: TextView = itemView.message
         val sender: TextView = itemView.sender_id
         val myImageView: ImageView = itemView.my_image
+
+//        private fun showUndoSnackBar() {
+//            val view: View = itemView.message_cordinator
+//            val snackBar = Snackbar.make(view, "Undo", Snackbar.LENGTH_LONG)
+//            snackBar.setAction("UNDO", View.OnClickListener {
+//                undoDelete()
+//            })
+//            snackBar.show()
+//
+//        }
+//
+//        private fun undoDelete() {
+//            messageList.add(mRecentlyDeletedItemPosition, mRecentlyDeletedItem)
+//            notifyItemInserted(mRecentlyDeletedItemPosition)
+//        }
+    }
+
+    fun deleteItem(position: Int) {
+        if (messageList.isNotEmpty()) {
+            mRecentlyDeletedItem = messageList[position]
+            mRecentlyDeletedItemPosition = position
+            messageList.removeAt(mRecentlyDeletedItemPosition)
+            notifyItemRemoved(mRecentlyDeletedItemPosition)
+
+//            showUndoSnackBar()
+        }
     }
 }
