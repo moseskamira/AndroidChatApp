@@ -1,6 +1,7 @@
 package com.example.chatapp.song
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import com.example.chatapp.R
 import com.google.android.youtube.player.YouTubeBaseActivity
@@ -31,7 +32,7 @@ class MySongsActivity : YouTubeBaseActivity() {
 
             }
             override fun onInitializationFailure(p0: YouTubePlayer.Provider?, p1: YouTubeInitializationResult?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                Log.d("FAILED", "Failed to initialize")
             }
         }
         playVideoButton = youtube_play

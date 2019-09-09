@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.RelativeLayout
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,17 +26,18 @@ import kotlinx.android.synthetic.main.activity_message.*
 @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class MessageActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
-    lateinit var imageRecyclerView: RecyclerView
-    lateinit var imageLayoutManager: RecyclerView.LayoutManager
-    lateinit var imageAdapter: ImageAdapter
+    private lateinit var imageRecyclerView: RecyclerView
+    private lateinit var imageLayoutManager: RecyclerView.LayoutManager
+    private lateinit var imageAdapter: ImageAdapter
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private lateinit var messageAdapter: MessageAdapter
     private var messageList: ArrayList<Message> = ArrayList()
-    lateinit var sendButton: Button
-    lateinit var mediaButton: Button
-    lateinit var messageInput: EditText
-    lateinit var messageDatabase: DatabaseReference
+    private lateinit var sendButton: Button
+    private lateinit var mediaButton: Button
+    private lateinit var messageInput: EditText
+    private lateinit var messageDatabase: DatabaseReference
     private lateinit var myChatObject: Chat
+    lateinit var cordinator: RelativeLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +56,10 @@ class MessageActivity : AppCompatActivity() {
         initializeChatRecyclerView()
         initializeImageRecyclerView()
         getChatMessages()
+
+        cordinator = findViewById(R.id.message_coordinator)
     }
+
 
     private val imageIdList: ArrayList<String> = ArrayList()
     var totalImagesUploaded: Int = 0
@@ -194,7 +199,7 @@ class MessageActivity : AppCompatActivity() {
         recyclerView.isNestedScrollingEnabled = false
         recyclerView.setHasFixedSize(false)
         recyclerView.layoutManager = layoutManager
-        messageAdapter = MessageAdapter(applicationContext, messageList)
+        messageAdapter = MessageAdapter(this, messageList)
         recyclerView.adapter = messageAdapter
         val itemTouchHelper = ItemTouchHelper(SwipeToDelete(messageAdapter,applicationContext))
         itemTouchHelper.attachToRecyclerView(recyclerView)

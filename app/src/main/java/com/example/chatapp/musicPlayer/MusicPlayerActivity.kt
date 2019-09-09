@@ -21,13 +21,12 @@ import java.util.*
 class MusicPlayerActivity : AppCompatActivity() {
     lateinit var albumArt: ImageView
     lateinit var playButton: ImageButton
-    lateinit var shuffleButton: ImageButton
     lateinit var nextButton: ImageButton
     lateinit var prevButton: ImageButton
     lateinit var stopButton: ImageButton
     lateinit var songTitle: TextView
-    lateinit var songArtiste: TextView
-    lateinit var mediaPlayer: MediaPlayer
+    lateinit var songArtist: TextView
+    var mediaPlayer: MediaPlayer? = null
     var songCounter = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,7 +68,7 @@ class MusicPlayerActivity : AppCompatActivity() {
                                 typeface = Typeface.DEFAULT_BOLD
                                 textSize = 18f
                             }
-                            songArtiste = textView {
+                            songArtist = textView {
                                 textColor = Color.WHITE
                             }
                             linearLayout {
@@ -97,12 +96,6 @@ class MusicPlayerActivity : AppCompatActivity() {
                                         stopPlaying()
                                     }
                                 }.lparams(0, wrapContent, 0.5f)
-                                shuffleButton = imageButton {
-                                    imageResource = R.drawable.ic_shuffle_black_24dp
-                                    onClick {
-                                        playRandom()
-                                    }
-                                }.lparams(0, wrapContent, 0.5f)
                             }.lparams(matchParent, wrapContent) {
                                 topMargin = dip(5)
                             }
@@ -116,50 +109,57 @@ class MusicPlayerActivity : AppCompatActivity() {
                     Collections.shuffle(songsList)
                     if (songsList.isNotEmpty()) {
                         val song = songsList[songCounter]
+
                         if (MediaPlayer.create(this@MusicPlayerActivity, song.uri) != null) {
                             mediaPlayer = MediaPlayer.create(this@MusicPlayerActivity, song.uri)
-                            mediaPlayer.setOnCompletionListener {
+                            albumArt.imageURI = song.albumArt
+                            songArtist.text = song.artist
+                            playButton.imageResource = R.drawable.ic_pause_circle_outline_black_24dp
+                            mediaPlayer!!.start()
+                            mediaPlayer!!.setOnCompletionListener {
                                 playRandom()
                             }
                         }
-                    albumArt.imageURI = song.albumArt
-                    songArtiste.text = song.artist
-                    mediaPlayer.start()
-                    playButton.imageResource = R.drawable.ic_pause_circle_outline_black_24dp
                     }
                 }
+
                 fun playOrPause() {
-                    val songPlaying: Boolean? = mediaPlayer.isPlaying
-                    if (songPlaying == true) {
-                        mediaPlayer.pause()
-                        playButton.imageResource = R.drawable.ic_play_circle_outline_black_24dp
-                    } else {
-                        mediaPlayer.start()
-                        playButton.imageResource = R.drawable.ic_pause_circle_outline_black_24dp
+                    if (mediaPlayer != null) {
+                        val songPlaying: Boolean? = mediaPlayer!!.isPlaying
+                        if (songPlaying == true) {
+                            mediaPlayer!!.pause()
+                            playButton.imageResource = R.drawable.ic_play_circle_outline_black_24dp
+                        } else {
+                            mediaPlayer!!.start()
+                            playButton.imageResource = R.drawable.ic_pause_circle_outline_black_24dp
+                        }
                     }
                 }
+
                 fun playNext() {
                     songCounter++
                     if (songCounter < songsList.size) {
-                        mediaPlayer.reset()
+                        mediaPlayer!!.reset()
                         playRandom()
                     } else {
                         songCounter = 0
                     }
                 }
+
                 fun playPrevious() {
                     songCounter--
                     if (songCounter >= 0) {
-                        mediaPlayer.reset()
+                        mediaPlayer!!.reset()
                         playRandom()
                     } else {
                         songCounter = 0
                     }
                 }
+
                 fun stopPlaying() {
-                    val songPlaying: Boolean? = mediaPlayer.isPlaying
+                    val songPlaying: Boolean? = mediaPlayer!!.isPlaying
                     if (songPlaying == true) {
-                        mediaPlayer.stop()
+                        mediaPlayer!!.stop()
                         playButton.imageResource = R.drawable.ic_play_circle_outline_black_24dp
                     }
                 }
@@ -169,6 +169,7 @@ class MusicPlayerActivity : AppCompatActivity() {
     }
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer.release()
+        mediaPlayer!!.reset()
+        mediaPlayer!!.release()
     }
 }

@@ -3,13 +3,14 @@ This project is intended to develop a chat application in Android
 
 ## Key Features on the App
 #### Media Player Feature:
-This feature enables users to play music stored on thir devices (Mobile Phones and Tablets)
+- This feature enables users to play music that is locally stored on their devices (Mobile Phones and Tablets)
 
 #### Chat Feature:
-This feature enables users to chat with the Artiste and or other users of the App.
+- users shall be able to create chat groups and share updates with other users as well as Moze-Li the Artist.
 
 #### Songs Feature:
-This feature provides access to all songs of Mozeli the Artiste
+- With this functionality, users shall be able to access Moze-Li's music both Audio and Video.
+(Still Under Implementation)
 
 #### Logout:
 Logs out users
@@ -19,6 +20,10 @@ Logs out users
 ![SnapShot2](/images/player.jpeg)
 
 ### Chat Functionality
-![SnapShot](/images/rec21.gif)
+
+![SnapShot](/images/chatting.gif)
+
+### Songs Functionality
+
 
 ## Future Implementation
