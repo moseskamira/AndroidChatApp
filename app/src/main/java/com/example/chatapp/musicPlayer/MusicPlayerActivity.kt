@@ -7,7 +7,6 @@ import android.graphics.Typeface
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -28,7 +27,7 @@ class MusicPlayerActivity : AppCompatActivity() {
     lateinit var stopButton: ImageButton
     lateinit var songTitle: TextView
     lateinit var songArtiste: TextView
-    var mediaPlayer: MediaPlayer? = null
+    lateinit var mediaPlayer: MediaPlayer
     var songCounter = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +55,6 @@ class MusicPlayerActivity : AppCompatActivity() {
         val musicFinder = MusicFinder(contentResolver)
         musicFinder.prepare()
         val songsList: List<MusicFinder.Song> = musicFinder.allSongs
-        Log.d("ALL SONGS", songsList.toString())
             val mediaPlayerUI = object : AnkoComponent<MusicPlayerActivity> {
                 override fun createView(ui: AnkoContext<MusicPlayerActivity>) = with(ui) {
                     relativeLayout {
@@ -118,33 +116,32 @@ class MusicPlayerActivity : AppCompatActivity() {
                     Collections.shuffle(songsList)
                     if (songsList.isNotEmpty()) {
                         val song = songsList[songCounter]
-                    Log.d("SONG", song.toString())
-                    if (mediaPlayer != null) {
-                        mediaPlayer!!.reset()
-                    }
-                    mediaPlayer = MediaPlayer.create(this@MusicPlayerActivity, song.uri)!!
-                    mediaPlayer!!.setOnCompletionListener {
-                        playRandom()
-                    }
+                        if (MediaPlayer.create(this@MusicPlayerActivity, song.uri) != null) {
+                            mediaPlayer = MediaPlayer.create(this@MusicPlayerActivity, song.uri)
+                            mediaPlayer.setOnCompletionListener {
+                                playRandom()
+                            }
+                        }
                     albumArt.imageURI = song.albumArt
                     songArtiste.text = song.artist
-                    mediaPlayer!!.start()
+                    mediaPlayer.start()
                     playButton.imageResource = R.drawable.ic_pause_circle_outline_black_24dp
                     }
                 }
                 fun playOrPause() {
-                    val songPlaying: Boolean? = mediaPlayer!!.isPlaying
+                    val songPlaying: Boolean? = mediaPlayer.isPlaying
                     if (songPlaying == true) {
-                        mediaPlayer!!.pause()
+                        mediaPlayer.pause()
                         playButton.imageResource = R.drawable.ic_play_circle_outline_black_24dp
                     } else {
-                        mediaPlayer!!.start()
+                        mediaPlayer.start()
                         playButton.imageResource = R.drawable.ic_pause_circle_outline_black_24dp
                     }
                 }
                 fun playNext() {
                     songCounter++
                     if (songCounter < songsList.size) {
+                        mediaPlayer.reset()
                         playRandom()
                     } else {
                         songCounter = 0
@@ -153,15 +150,16 @@ class MusicPlayerActivity : AppCompatActivity() {
                 fun playPrevious() {
                     songCounter--
                     if (songCounter >= 0) {
+                        mediaPlayer.reset()
                         playRandom()
                     } else {
                         songCounter = 0
                     }
                 }
                 fun stopPlaying() {
-                    val songPlaying: Boolean? = mediaPlayer!!.isPlaying
+                    val songPlaying: Boolean? = mediaPlayer.isPlaying
                     if (songPlaying == true) {
-                        mediaPlayer!!.stop()
+                        mediaPlayer.stop()
                         playButton.imageResource = R.drawable.ic_play_circle_outline_black_24dp
                     }
                 }
@@ -171,6 +169,6 @@ class MusicPlayerActivity : AppCompatActivity() {
     }
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer!!.release()
+        mediaPlayer.release()
     }
 }

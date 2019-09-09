@@ -7,7 +7,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@color/colorMainBackground"
-        android:padding="8dp"
+
         tools:context=".myChat.user.UserActivity">
     <Button
             android:layout_width="match_parent"

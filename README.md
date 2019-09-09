@@ -16,10 +16,9 @@ Logs out users
 
 ## Snapshots of the different App Features
 ### Media Player (Player Functionality)
-![SnapShot2](/images/mediaplayer.jpeg)
+![SnapShot2](/images/player.jpeg)
 
 ### Chat Functionality
 ![SnapShot](/images/rec21.gif)
-
 
 ## Future Implementation
