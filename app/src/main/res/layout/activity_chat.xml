@@ -6,7 +6,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorMainBackground"
-        android:padding="8dp"
         tools:context=".myChat.mainPage.ChatActivity">
     <RelativeLayout
             android:orientation="vertical"
@@ -25,6 +24,7 @@
                 android:id="@+id/audio_player_button"
                 android:layout_marginTop="0dp"
                 android:background="@color/colorButtons"
+                android:textColor="@color/colorButtonText"
                 android:layout_alignParentTop="true"/>
         <Button
                 android:layout_width="wrap_content"
@@ -33,6 +33,7 @@
                 android:id="@+id/find_user_button"
                 android:layout_marginTop="0dp"
                 android:background="@color/colorButtons"
+                android:textColor="@color/colorButtonText"
                 android:layout_toEndOf="@+id/audio_player_button"
                 android:layout_alignParentTop="true"/>
         <Button
@@ -40,6 +41,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/songs"
                 android:id="@+id/songs_button"
+                android:textColor="@color/colorButtonText"
                 android:background="@color/colorButtons"
                 android:layout_toEndOf="@+id/find_user_button"
                 android:layout_marginTop="0dp"
@@ -49,12 +51,12 @@
                 android:layout_height="wrap_content"
                 android:text="@string/logout"
                 android:id="@+id/log_out_button"
+                android:textColor="@color/colorButtonText"
                 android:background="@color/colorButtons"
                 android:layout_toEndOf="@+id/songs_button"
                 android:layout_marginTop="0dp"
                 android:layout_alignParentTop="true"/>
     </RelativeLayout>
-
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -62,5 +64,4 @@
             android:id="@+id/chat_recycler_view"
             app:layout_constraintTop_toBottomOf="@id/main_page_buttons">
     </androidx.recyclerview.widget.RecyclerView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
