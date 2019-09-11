@@ -18,7 +18,6 @@ class MessageAdapter(private val messageActivity:MessageActivity, private val me
     : RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() {
     private lateinit var messageToDelete: Message
     private var messageToDeletePosition: Int = 0
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
         val messageView = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_message, parent, false)
@@ -32,15 +31,17 @@ class MessageAdapter(private val messageActivity:MessageActivity, private val me
     override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
         holder.chatMessage.text = messageList[position].message
         holder.sender.text = messageList[position].senderId
-        if (messageList[holder.adapterPosition].imageUrlList.isEmpty()) {
-            holder.myImageView.visibility = View.GONE
-        } else {
-            Glide.with(messageActivity.applicationContext).asBitmap().load(messageList[holder.adapterPosition].imageUrlList[0])
-                .into(holder.myImageView)
-            holder.myImageView.setOnClickListener { view ->
-                ImageViewer.Builder(view!!.context, messageList[holder.adapterPosition].imageUrlList)
-                    .setStartPosition(0)
-                    .show()
+        when {
+            messageList[holder.adapterPosition].imageUrlList.isEmpty() -> holder.myImageView.visibility = View.GONE
+            else -> {
+                Glide.with(messageActivity.applicationContext).asBitmap().load(messageList[holder.adapterPosition]
+                    .imageUrlList[0])
+                    .into(holder.myImageView)
+                holder.myImageView.setOnClickListener { view ->
+                    ImageViewer.Builder(view!!.context, messageList[holder.adapterPosition].imageUrlList)
+                        .setStartPosition(0)
+                        .show()
+                }
             }
         }
 
@@ -54,12 +55,14 @@ class MessageAdapter(private val messageActivity:MessageActivity, private val me
     }
 
     fun deleteItemFromRecyclerView(position: Int) {
-        if (messageList.isNotEmpty()) {
-            messageToDeletePosition = position
-            messageToDelete = messageList[messageToDeletePosition]
-            messageList.remove(messageToDelete)
-            notifyItemRemoved(messageToDeletePosition)
-            displayUndoSnackBar()
+        when {
+            messageList.isNotEmpty() -> {
+                messageToDeletePosition = position
+                messageToDelete = messageList[messageToDeletePosition]
+                messageList.remove(messageToDelete)
+                notifyItemRemoved(messageToDeletePosition)
+                displayUndoSnackBar()
+            }
         }
     }
 
