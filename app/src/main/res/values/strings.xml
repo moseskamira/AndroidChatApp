@@ -37,4 +37,11 @@
     <string name="todo">TODO</string>
     <string name="playSong">Play Song</string>
     <string name="mozeli_videos">MOZELI VIDEOS/ AUDIOS</string>
+    <string name="contacts">Contacts</string>
+    <string name="contactlist">contactlist</string>
+    <string name="playerlist">playerList</string>
+    <string name="attachimage">attachImage</string>
+    <string name="sendbutton">sendButton</string>
+    <string name="type_message">Type message</string>
+    <string name="cambutton">camButton</string>
 </resources>

@@ -4,24 +4,22 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageButton
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.chatapp.myChat.login.LogInActivity
 import com.example.chatapp.R
 import com.example.chatapp.musicPlayer.MusicPlayerActivity
 import com.example.chatapp.song.MySongsActivity
 import com.example.chatapp.myChat.user.UserActivity
 import com.example.chatapp.myChat.user.User
-import com.facebook.drawee.backends.pipeline.Fresco
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.onesignal.OneSignal
 import kotlinx.android.synthetic.main.activity_chat.*
 
 class ChatActivity : AppCompatActivity() {
-    lateinit var audioPlayer: Button
-    lateinit var logOutButton: Button
-    lateinit var findUserButton: Button
+    lateinit var audioPlayer: ImageButton
+    lateinit var findUserButton: ImageButton
     lateinit var mySongsButton: Button
     private lateinit var chatRecyclerView: RecyclerView
     private lateinit var chatLayoutManager: RecyclerView.LayoutManager
@@ -43,7 +41,6 @@ class ChatActivity : AppCompatActivity() {
             startActivity(Intent(applicationContext, UserActivity::class.java))
         }
         audioPlayer = audio_player_button
-        logOutButton = log_out_button
         audioPlayer.setOnClickListener {
             val playerIntent = Intent(this, MusicPlayerActivity::class.java)
             startActivity(playerIntent)
@@ -52,15 +49,6 @@ class ChatActivity : AppCompatActivity() {
         mySongsButton.setOnClickListener {
             val songsIntent = Intent(this, MySongsActivity::class.java)
             startActivity(songsIntent)
-        }
-        logOutButton.setOnClickListener {
-            OneSignal.setSubscription(false)
-            FirebaseAuth.getInstance().signOut()
-            Fresco.initialize(this)
-            val intent = Intent(applicationContext, LogInActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(intent)
-            finish()
         }
         getPermission()
         initializeChatRecyclerView()

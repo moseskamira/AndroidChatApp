@@ -15,47 +15,66 @@
             app:layout_constraintLeft_toLeftOf="parent"
             android:id="@+id/main_page_buttons"
             android:baselineAligned="false"
-            android:gravity="center"
+            android:gravity="center_horizontal"
+            android:background="@color/colorButtons"
             app:layout_constraintRight_toRightOf="parent">
-        <Button
+
+        <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/player"
+                android:src="@drawable/ic_tap_and_play_black_24dp"
                 android:id="@+id/audio_player_button"
-                android:layout_marginTop="0dp"
+                android:foregroundGravity="bottom"
                 android:background="@color/colorButtons"
-                android:textColor="@color/colorButtonText"
+                android:contentDescription="@string/playerlist"
+                android:layout_marginTop="18dp"
+                android:layout_marginStart="12dp"
                 android:layout_alignParentTop="true"/>
-        <Button
-                android:layout_width="wrap_content"
+        <ImageButton
                 android:layout_height="wrap_content"
-                android:text="@string/chats"
+                android:layout_width="wrap_content"
+                android:src="@drawable/ic_contacts_black_24dp"
                 android:id="@+id/find_user_button"
-                android:layout_marginTop="0dp"
+                android:foregroundGravity="bottom"
                 android:background="@color/colorButtons"
-                android:textColor="@color/colorButtonText"
-                android:layout_toEndOf="@+id/audio_player_button"
-                android:layout_alignParentTop="true"/>
+                android:layout_toEndOf="@id/audio_player_button"
+                android:layout_alignTop="@+id/audio_player_button"
+                android:contentDescription="@string/contactlist"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="0dp"/>
         <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="70dp"
+                android:layout_height="28dp"
                 android:text="@string/songs"
                 android:id="@+id/songs_button"
                 android:textColor="@color/colorButtonText"
+                android:layout_toEndOf="@id/find_user_button"
                 android:background="@color/colorButtons"
-                android:layout_toEndOf="@+id/find_user_button"
-                android:layout_marginTop="0dp"
-                android:layout_alignParentTop="true"/>
-        <Button
+                android:layout_marginStart="20dp"
+                android:layout_alignTop="@+id/find_user_button"/>
+        <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/logout"
-                android:id="@+id/log_out_button"
-                android:textColor="@color/colorButtonText"
-                android:background="@color/colorButtons"
+                android:src="@drawable/ic_camera_alt_black_24dp"
+                android:id="@+id/camera_button"
+                android:foregroundGravity="bottom"
                 android:layout_toEndOf="@+id/songs_button"
-                android:layout_marginTop="0dp"
-                android:layout_alignParentTop="true"/>
+                android:layout_alignTop="@id/songs_button"
+                android:background="@color/colorButtons"
+                android:contentDescription="@string/playerlist"
+                android:layout_marginStart="20dp"/>
+        <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_info_black_24dp"
+                android:id="@+id/info_button"
+                android:foregroundGravity="bottom"
+                android:layout_toEndOf="@+id/camera_button"
+                android:layout_alignTop="@id/camera_button"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="12dp"
+                android:background="@color/colorButtons"
+                android:contentDescription="@string/playerlist"/>
     </RelativeLayout>
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"

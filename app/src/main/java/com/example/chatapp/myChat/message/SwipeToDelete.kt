@@ -25,26 +25,27 @@ class SwipeToDelete(val adapter: MessageAdapter, val context: Context) : ItemTou
     override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float,
         dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+
         val itemView = viewHolder.itemView
         val backgroundCornerOffset = 10
         val deleteIconMargin = (itemView.height - deleteIcon.intrinsicHeight)/2
         val deleteIconTop = itemView.top + (itemView.height - deleteIcon.intrinsicHeight)
         val deleteIconBottom = deleteIconTop + deleteIcon.intrinsicHeight
+
         when {
-            dX > 0 -> {
-                val deleteIconLeft = itemView.left + deleteIconMargin + deleteIcon.intrinsicWidth
-                val deleteIconRight = itemView.left + deleteIconMargin
+            dX > 0 -> { // swipe Left to Right
+                val deleteIconRight = itemView.left + deleteIconMargin + deleteIcon.intrinsicWidth
+                val deleteIconLeft = itemView.left + deleteIconMargin
                 deleteIcon.bounds = Rect(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
                 backgroundColor.bounds =  Rect(itemView.left, itemView.top, itemView.left+ dX.toInt() +
                         backgroundCornerOffset, itemView.bottom)
             }
-            dX < 0 -> {
+            dX < 0 -> { // Swipe Right to Left
                 val deleteIconLeft = itemView.right - deleteIconMargin - deleteIcon.intrinsicWidth
                 val deleteIconRight = itemView.right - deleteIconMargin
                 deleteIcon.bounds = Rect(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
                 backgroundColor.bounds =  Rect(itemView.right+ dX.toInt() - backgroundCornerOffset, itemView.top,
                     itemView.right, itemView.bottom)
-
             }
             else -> backgroundColor.bounds = Rect(0,0,0,0)
         }
