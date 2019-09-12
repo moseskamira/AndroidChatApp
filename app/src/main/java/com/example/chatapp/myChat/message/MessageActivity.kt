@@ -1,16 +1,25 @@
 package com.example.chatapp.myChat.message
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.RelativeLayout
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,8 +34,13 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import kotlinx.android.synthetic.main.activity_message.*
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
-@Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+
 class MessageActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var imageRecyclerView: RecyclerView
@@ -36,7 +50,7 @@ class MessageActivity : AppCompatActivity() {
     private lateinit var messageAdapter: MessageAdapter
     private var messageList: ArrayList<Message> = ArrayList()
     private lateinit var sendButton: ImageButton
-    private lateinit var mediaButton: ImageButton
+    private lateinit var photoGalleryButton: ImageButton
     private lateinit var messageInput: EditText
     lateinit var camera: ImageButton
     private lateinit var messageDatabase: DatabaseReference
@@ -44,7 +58,7 @@ class MessageActivity : AppCompatActivity() {
     lateinit var cordinator: RelativeLayout
     private val imageIdList: ArrayList<String> = ArrayList()
     private var totalImagesUploaded: Int = 0
-    private val pickImageContent = 1
+    lateinit var photoFilePath: String
     private val mediaUriList: ArrayList<String> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,12 +69,15 @@ class MessageActivity : AppCompatActivity() {
         camera = cam_id
         myChatObject = intent.getSerializableExtra("chatObject") as Chat
         sendButton = send_id
-        mediaButton = add_media_button
+        photoGalleryButton = add_media_button
         sendButton.setOnClickListener {
             sendMessage()
         }
-        mediaButton.setOnClickListener {
-            openMediaGallery()
+        photoGalleryButton.setOnClickListener {
+            openPhotoGallery()
+        }
+        camera.setOnClickListener {
+            checkCameraPermission()
         }
         messageInput.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
@@ -78,6 +95,7 @@ class MessageActivity : AppCompatActivity() {
         getChatMessages()
         cordinator = findViewById(R.id.message_coordinator)
     }
+
     private fun textChanged(k: CharSequence) {
         when {
             k.isNotEmpty() -> {
@@ -153,18 +171,15 @@ class MessageActivity : AppCompatActivity() {
     private fun getChatMessages() {
         val newMessageDatabase = FirebaseDatabase.getInstance().reference.child("chat")
             .child(myChatObject.chatId)
-
         newMessageDatabase.addChildEventListener(object : ChildEventListener {
             override fun onCancelled(databaseError: DatabaseError) {
                 TODO("not implemented")
                 //To change body of created functions use File | Settings | File Templates.
             }
-
             override fun onChildMoved(databaseSnapShot: DataSnapshot, p1: String?) {
                 TODO("not implemented")
                 //To change body of created functions use File | Settings | File Templates.
             }
-
             override fun onChildChanged(databaseSnapShot: DataSnapshot, p1: String?) {
                 when {
                     databaseSnapShot.exists() -> {
@@ -197,7 +212,6 @@ class MessageActivity : AppCompatActivity() {
                     }
                 }
             }
-
             override fun onChildAdded(databaseSnapShot: DataSnapshot, p1: String?) {
                 when {
                     databaseSnapShot.exists() -> {
@@ -231,7 +245,6 @@ class MessageActivity : AppCompatActivity() {
                     }
                 }
             }
-
             override fun onChildRemoved(dataSnapshot: DataSnapshot) {
                 TODO("not implemented")
                 //To change body of created functions use File | Settings | File Templates.
@@ -239,25 +252,92 @@ class MessageActivity : AppCompatActivity() {
         })
     }
 
-    private fun openMediaGallery() {
+    private fun openPhotoGallery() {
         val mediaIntent = Intent()
         mediaIntent.type = "image/*"
         mediaIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
         mediaIntent.action = Intent.ACTION_GET_CONTENT
-        startActivityForResult(Intent.createChooser(mediaIntent, "Select Picture(s)"), pickImageContent)
+        startActivityForResult(Intent.createChooser(mediaIntent, "Select Picture(s)"), 1)
+    }
+
+
+    private fun checkCameraPermission() {
+        when {
+            ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager
+                .PERMISSION_GRANTED -> {
+                camera.isEnabled = false
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA, Manifest.permission
+                    .WRITE_EXTERNAL_STORAGE ), 2)
+            } else -> { camera.isEnabled = true
+            takePicture()}
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when {
+            requestCode == 2 && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED &&
+                    grantResults[1] == PackageManager.PERMISSION_GRANTED -> {
+                camera.isEnabled = true
+                takePicture()
+            }
+        }
+    }
+
+    private fun takePicture() {
+        val picIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        when {
+            picIntent.resolveActivity(packageManager) != null -> {
+                val photoFile = createPhoneFile()
+                when {
+                    photoFile != null -> {
+                        photoFilePath = photoFile.absolutePath
+                        val photoUri: Uri = FileProvider.getUriForFile(this,
+                            "com.example.chatapp.myChat.message.GenericFileProvider", photoFile)
+                        picIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+                        startActivityForResult(picIntent, 3)
+                        // Add Code Here
+
+                    }
+                }
+            }
+        }
+    }
+
+    private fun createPhoneFile(): File? {
+        var photo: File? = null
+        val photoName: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        when {
+            photoName.isNotEmpty() -> {
+                val photoDirectory = File(Environment.getExternalStorageDirectory().absolutePath +
+                        File.separator + "DCIM/Camera")
+                when {
+                    !photoDirectory.exists() -> photoDirectory.mkdirs()
+                }
+                photo = File.createTempFile(photoName, ".jpg", photoDirectory)
+            }
+        }
+        return photo
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK && requestCode == pickImageContent) {
-            if (data!!.clipData == null) {
-                mediaUriList.add(data.data.toString())
-            } else {
-                for (i in data.clipData.itemCount.toString()) {
-                    mediaUriList.add(data.clipData.getItemAt(i.toInt()).uri.toString())
+        when {
+            requestCode == 1 && resultCode == Activity.RESULT_OK -> {
+                sendButton.visibility = View.VISIBLE
+                camera.visibility = View.GONE
+
+                when {
+                    data!!.clipData == null -> mediaUriList.add(data.data.toString())
+                    else -> for (i in data.clipData?.itemCount.toString()) {
+                        mediaUriList.add(data.clipData?.getItemAt(i.toInt())?.uri.toString())
+                    }
                 }
+                imageAdapter.notifyDataSetChanged()
             }
-            imageAdapter.notifyDataSetChanged()
+            requestCode == 3 && resultCode == Activity.RESULT_OK -> {
+                val bitmap: Bitmap = BitmapFactory.decodeFile(photoFilePath)
+            }
         }
     }
 
