@@ -7,6 +7,9 @@
     <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
 
     <application
             android:allowBackup="true"
@@ -30,18 +33,22 @@
         </activity>
         <activity android:name="com.example.chatapp.myChat.message.MessageActivity">
         </activity> <!-- <uses-library -->
-        <!-- android:name="com.google.android.wearable" -->
-        <!-- android:required="true"/> -->
-        <!--
-               Set to true if your app is Standalone, that is, it does not require the handheld
-               app to run.
-        -->
         <meta-data
                 android:name="com.google.android.wearable.standalone"
                 android:value="true"/>
 
         <activity android:name="com.example.chatapp.myChat.user.UserActivity">
         </activity>
+        <provider
+                android:name=".myChat.message.GenericFileProvider"
+                android:authorities="com.example.chatapp.myChat.message.GenericFileProvider"
+                android:exported="false"
+                android:grantUriPermissions="true">
+            <meta-data
+                    android:name="android.support.FILE_PROVIDER_PATHS"
+                    android:resource="@xml/file_path">
+            </meta-data>
+        </provider>
     </application>
 
 </manifest>

@@ -120,7 +120,8 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun getUserData(newUser: User) {
-        val newUserDatabaseReference: DatabaseReference = FirebaseDatabase.getInstance().reference.child("user")
+        val newUserDatabaseReference: DatabaseReference = FirebaseDatabase.getInstance().reference
+            .child("user")
             .child(newUser.uid.toString())
         newUserDatabaseReference.addValueEventListener(object : ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {
