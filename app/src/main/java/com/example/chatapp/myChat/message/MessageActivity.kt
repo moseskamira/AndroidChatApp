@@ -253,8 +253,8 @@ class MessageActivity : AppCompatActivity() {
             if (data!!.clipData == null) {
                 mediaUriList.add(data.data.toString())
             } else {
-                for (i in data.clipData.itemCount.toString()) {
-                    mediaUriList.add(data.clipData.getItemAt(i.toInt()).uri.toString())
+                for (i in data.clipData!!.itemCount.toString()) {
+                    mediaUriList.add(data.clipData!!.getItemAt(i.toInt()).uri.toString())
                 }
             }
             imageAdapter.notifyDataSetChanged()

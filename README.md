@@ -1,4 +1,4 @@
-# MOZELI QuickApp
+# FireBase Impl-FullAndroidApp
 This project is intended to develop a chat application in Android
 
 ## Key Features on the App
@@ -6,11 +6,8 @@ This project is intended to develop a chat application in Android
 - This feature enables users to play music that is locally stored on their devices (Mobile Phones and Tablets)
 
 #### Chat Feature:
-- users shall be able to create chat groups and share updates with other users as well as Moze-Li the Artist.
+- users shall be able to create chat groups and share updates with other users.
 
-#### Songs Feature:
-- With this functionality, users shall be able to access Moze-Li's music both Audio and Video.
-(Still Under Implementation)
 
 #### Logout:
 Logs out users
