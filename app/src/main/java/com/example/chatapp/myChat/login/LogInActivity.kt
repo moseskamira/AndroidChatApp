@@ -22,47 +22,64 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.util.concurrent.TimeUnit
 
 class LogInActivity : AppCompatActivity() {
-    private lateinit var phoneNumberRequest: EditText
-    private lateinit var generateCodeRequestButton: Button
-    private lateinit var generatedVerificationCode: EditText
+    private lateinit var phoneNumberReqEt: EditText
+    private lateinit var genVerifCodeEt: EditText
+    private lateinit var generateCodeReqBtn: Button
     private lateinit var verificationCallBack: PhoneAuthProvider.OnVerificationStateChangedCallbacks
-    var mVerificationId: String? = null
+    private lateinit var genCode: String
+    var phoneNumber: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         FirebaseApp.initializeApp(this)
-        phoneNumberRequest = phone_number_request
-        generateCodeRequestButton = generate_code_button
-        generatedVerificationCode = generated_code
+        phoneNumberReqEt = phone_number_request
+        generateCodeReqBtn = generate_code_button
+        genVerifCodeEt = generated_code
+
+
         verificationCallBack = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             override fun onVerificationCompleted(phoneAuthCredential: PhoneAuthCredential) {
                 signInWithFirebaseAuthCredential(phoneAuthCredential)
             }
+
             override fun onVerificationFailed(firebaseException: FirebaseException) {
-                Toast.makeText(applicationContext, firebaseException.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, firebaseException.message, Toast.LENGTH_SHORT)
+                    .show()
             }
+
             @RequiresApi(Build.VERSION_CODES.O)
-            override fun onCodeSent(verificationId: String, token: PhoneAuthProvider.ForceResendingToken) {
+            override fun onCodeSent(
+                verificationId: String,
+                token: PhoneAuthProvider.ForceResendingToken
+            ) {
                 super.onCodeSent(verificationId, token)
-                mVerificationId = verificationId
-                generatedVerificationCode.visibility = View.VISIBLE
-                generateCodeRequestButton.text = getString(R.string.submit_code)
-                phoneNumberRequest.visibility= View.GONE
+                phoneNumber = verificationId
+                genVerifCodeEt.visibility = View.VISIBLE
+                generateCodeReqBtn.text = getString(R.string.submit_code)
+                phoneNumberReqEt.visibility = View.GONE
             }
         }
-        generateCodeRequestButton.setOnClickListener {
-            if (mVerificationId != null) {
+        generateCodeReqBtn.setOnClickListener {
+            if (phoneNumber != null) {
                 verifyPhoneNumberWithCode()
             } else
-                startPhoneNumberVerification()
+                startPhoneNumberVerification(phoneNumber!!)
         }
     }
 
-    private fun startPhoneNumberVerification() {
-        if (phoneNumberRequest.text.isNotEmpty()) {
-            PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                phoneNumberRequest.text.toString(), 60, TimeUnit.SECONDS, this, verificationCallBack)
+    fun startPhoneNumberVerification(phone: String): Boolean {
+        return if (phone.isNotEmpty()) {
+            val options: PhoneAuthOptions = PhoneAuthOptions.newBuilder()
+                .setPhoneNumber(phone)
+                .setTimeout(60L, TimeUnit.SECONDS)
+                .setActivity(this)
+                .setCallbacks(verificationCallBack)
+                .build();
+            PhoneAuthProvider.verifyPhoneNumber(options)
+            true
+        } else {
+            false
         }
     }
 
@@ -72,16 +89,19 @@ class LogInActivity : AppCompatActivity() {
             if (currentAuthenticatedUser != null) {
                 val userDatabaseReference = FirebaseDatabase.getInstance().reference
                     .child("user").child(currentAuthenticatedUser.uid)
-                userDatabaseReference.addListenerForSingleValueEvent(object: ValueEventListener {
+                userDatabaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         if (!dataSnapshot.exists()) {
                             val userCredentialMap = HashMap<String, Any>()
-                            userCredentialMap["phoneNumber"] = currentAuthenticatedUser.phoneNumber.toString()
-                            userCredentialMap["userName"] = currentAuthenticatedUser.phoneNumber.toString()
+                            userCredentialMap["phoneNumber"] =
+                                currentAuthenticatedUser.phoneNumber.toString()
+                            userCredentialMap["userName"] =
+                                currentAuthenticatedUser.phoneNumber.toString()
                             userDatabaseReference.updateChildren(userCredentialMap)
                         }
                         userIsLoggedIn()
                     }
+
                     override fun onCancelled(databaseError: DatabaseError) {
                         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                     }
@@ -97,9 +117,9 @@ class LogInActivity : AppCompatActivity() {
     }
 
     private fun verifyPhoneNumberWithCode() {
-        if (mVerificationId != null && generatedVerificationCode.text.isNotEmpty() ) {
-            val phoneCredential: PhoneAuthCredential = PhoneAuthProvider
-                .getCredential(mVerificationId!!, generatedVerificationCode.text.toString())
+        genCode = genVerifCodeEt.text.toString()
+        if (phoneNumber != null && genCode.isNotEmpty()) {
+            val phoneCredential: PhoneAuthCredential = PhoneAuthProvider.getCredential(phoneNumber!!, genCode)
             signInWithFirebaseAuthCredential(phoneCredential)
         }
     }
